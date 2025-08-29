@@ -1,89 +1,68 @@
-// 简化的波尼亚AI平台首页
-
 export default function Home() {
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          🎉 波尼亚AI平台
-        </h1>
-        <p className="text-xl text-gray-600 mb-8">
-          企业级AI数据分析平台 - 部署成功！
-        </p>
+    <html>
+      <head>
+        <title>波尼亚AI平台</title>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body style={{ margin: 0, padding: '20px', fontFamily: 'Arial, sans-serif', backgroundColor: '#f5f5f5' }}>
+        <div style={{ maxWidth: '800px', margin: '0 auto', backgroundColor: 'white', padding: '40px', borderRadius: '8px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)' }}>
+          <h1 style={{ color: '#333', fontSize: '2.5rem', marginBottom: '20px', textAlign: 'center' }}>
+            🎉 波尼亚AI平台
+          </h1>
+          <p style={{ color: '#666', fontSize: '1.2rem', textAlign: 'center', marginBottom: '30px' }}>
+            企业级AI数据分析平台 - 部署成功！
+          </p>
 
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
-          <h2 className="text-2xl font-semibold mb-4">✅ 系统状态</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-green-50 p-4 rounded-lg">
-              <h3 className="font-semibold text-green-800">部署状态</h3>
-              <p className="text-green-600">✅ 成功部署</p>
-            </div>
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <h3 className="font-semibold text-blue-800">构建版本</h3>
-              <p className="text-blue-600">📦 v1.0.0</p>
-            </div>
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <h3 className="font-semibold text-purple-800">环境</h3>
-              <p className="text-purple-600">🚀 生产环境</p>
-            </div>
-            <div className="bg-orange-50 p-4 rounded-lg">
-              <h3 className="font-semibold text-orange-800">域名</h3>
-              <p className="text-orange-600">🌐 boniya.aifly.me</p>
+          <div style={{ backgroundColor: '#e8f5e8', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
+            <h2 style={{ color: '#2d5a2d', marginBottom: '10px' }}>✅ 系统状态</h2>
+            <p style={{ color: '#2d5a2d', margin: '5px 0' }}>🚀 部署状态: 成功</p>
+            <p style={{ color: '#2d5a2d', margin: '5px 0' }}>📦 版本: v1.0.0</p>
+            <p style={{ color: '#2d5a2d', margin: '5px 0' }}>🌐 域名: boniya.aifly.me</p>
+            <p style={{ color: '#2d5a2d', margin: '5px 0' }}>⏰ 时间: {new Date().toLocaleString('zh-CN')}</p>
+          </div>
+
+          <div style={{ backgroundColor: '#e8f0ff', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
+            <h2 style={{ color: '#1a365d', marginBottom: '15px' }}>🚀 核心功能模块</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '10px' }}>
+              <div style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }}>📊 销售预测</div>
+              <div style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }}>📈 竞品分析</div>
+              <div style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }}>🛒 电商分析</div>
+              <div style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }}>💬 智能客服</div>
+              <div style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }}>🏪 门店运营</div>
+              <div style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }}>🛡️ 品质控制</div>
+              <div style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }}>⚖️ 商品识别</div>
+              <div style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }}>🕷️ 京东爬虫</div>
+              <div style={{ padding: '10px', border: '1px solid #ddd', borderRadius: '4px' }}>🤖 Gemini AI</div>
             </div>
           </div>
-        </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <h2 className="text-2xl font-semibold mb-4">🚀 核心功能模块</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="p-4 border rounded-lg">
-              <h3 className="font-semibold">📊 销售预测</h3>
-              <p className="text-sm text-gray-600">门店销售数量预测</p>
-            </div>
-            <div className="p-4 border rounded-lg">
-              <h3 className="font-semibold">📈 竞品分析</h3>
-              <p className="text-sm text-gray-600">竞品价格分析</p>
-            </div>
-            <div className="p-4 border rounded-lg">
-              <h3 className="font-semibold">🛒 电商分析</h3>
-              <p className="text-sm text-gray-600">电商平台数据分析</p>
-            </div>
-            <div className="p-4 border rounded-lg">
-              <h3 className="font-semibold">💬 智能客服</h3>
-              <p className="text-sm text-gray-600">智能客服管理</p>
-            </div>
-            <div className="p-4 border rounded-lg">
-              <h3 className="font-semibold">🏪 门店运营</h3>
-              <p className="text-sm text-gray-600">门店运营标准化</p>
-            </div>
-            <div className="p-4 border rounded-lg">
-              <h3 className="font-semibold">🛡️ 品质控制</h3>
-              <p className="text-sm text-gray-600">产品品质智能控制</p>
-            </div>
-            <div className="p-4 border rounded-lg">
-              <h3 className="font-semibold">⚖️ 商品识别</h3>
-              <p className="text-sm text-gray-600">称重商品自动识别</p>
-            </div>
-            <div className="p-4 border rounded-lg">
-              <h3 className="font-semibold">🕷️ 京东爬虫</h3>
-              <p className="text-sm text-gray-600">评论数据采集</p>
-            </div>
-            <div className="p-4 border rounded-lg">
-              <h3 className="font-semibold">🤖 Gemini AI</h3>
-              <p className="text-sm text-gray-600">Google AI集成</p>
-            </div>
+          <div style={{ backgroundColor: '#fff3cd', padding: '20px', borderRadius: '8px' }}>
+            <h2 style={{ color: '#856404', marginBottom: '10px' }}>🔗 API测试</h2>
+            <p style={{ color: '#856404', margin: '5px 0' }}>
+              <a href="/api/health" style={{ color: '#007bff', textDecoration: 'none' }}>
+                🔍 健康检查: /api/health
+              </a>
+            </p>
+            <p style={{ color: '#856404', margin: '5px 0' }}>
+              <a href="/api/test" style={{ color: '#007bff', textDecoration: 'none' }}>
+                🧪 环境测试: /api/test
+              </a>
+            </p>
+            <p style={{ color: '#856404', margin: '5px 0' }}>
+              <a href="/api/ai/gemini/test" style={{ color: '#007bff', textDecoration: 'none' }}>
+                🤖 AI测试: /api/ai/gemini/test
+              </a>
+            </p>
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '30px', color: '#888' }}>
+            <p>🎊 恭喜！波尼亚AI平台已成功部署并运行</p>
+            <p style={{ fontSize: '0.9rem' }}>如果您看到这个页面，说明部署完全成功！</p>
           </div>
         </div>
-
-        <div className="mt-8 text-center">
-          <p className="text-gray-500">
-            🎊 恭喜！波尼亚AI平台已成功部署并运行
-          </p>
-          <p className="text-sm text-gray-400 mt-2">
-            构建时间: {new Date().toLocaleString('zh-CN')}
-          </p>
-        </div>
-      </div>
-    </div>
+      </body>
+    </html>
   )
 }
