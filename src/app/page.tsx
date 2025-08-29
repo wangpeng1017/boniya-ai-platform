@@ -134,23 +134,23 @@ export default function Home() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-gray-900">叶组配方管理</h1>
+            <h1 className="text-2xl font-semibold text-gray-900">波尼亚AI平台</h1>
             <p className="text-sm text-gray-500 mt-1">
-              管理叶组配方的创建、编辑、版本控制和历史记录
+              智能化业务管理平台 - 7大核心业务模块全面覆盖
             </p>
           </div>
           <div className="flex items-center space-x-3">
             <Button variant="outline" size="sm" className="text-gray-600 border-gray-300">
               <Settings className="h-4 w-4 mr-2" />
-              导本地对
+              系统设置
             </Button>
             <Button variant="outline" size="sm" className="text-gray-600 border-gray-300">
               <Activity className="h-4 w-4 mr-2" />
-              智能导入
+              数据统计
             </Button>
             <Button className="bg-blue-600 hover:bg-blue-700 text-white">
               <Plus className="h-4 w-4 mr-2" />
-              新建配方
+              快速开始
             </Button>
           </div>
         </div>
@@ -158,13 +158,13 @@ export default function Home() {
         {/* Filter Tabs */}
         <div className="flex items-center space-x-6 border-b border-gray-200">
           <button className="pb-3 px-1 border-b-2 border-blue-600 text-blue-600 font-medium text-sm">
-            配方管理
+            业务模块总览
           </button>
           <button className="pb-3 px-1 text-gray-500 hover:text-gray-700 font-medium text-sm">
-            智能设计
+            AI功能统计
           </button>
           <button className="pb-3 px-1 text-gray-500 hover:text-gray-700 font-medium text-sm">
-            配方验证
+            系统监控
           </button>
         </div>
 
@@ -174,7 +174,7 @@ export default function Home() {
             <div className="relative">
               <input
                 type="text"
-                placeholder="搜索配方名称或编号"
+                placeholder="搜索业务模块名称或功能"
                 className="w-80 pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
               <button className="absolute right-3 top-2.5 text-gray-400">
@@ -184,10 +184,11 @@ export default function Home() {
               </button>
             </div>
             <select className="px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-600">
-              <option>保存状态</option>
+              <option>开发状态</option>
               <option>已发布</option>
               <option>开发中</option>
               <option>内测中</option>
+              <option>规划中</option>
             </select>
           </div>
         </div>
@@ -199,25 +200,25 @@ export default function Home() {
               <thead className="bg-gray-50 border-b border-gray-200">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    配方编号
+                    模块编号
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    配方名称
+                    业务模块名称
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     版本
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    状态
+                    开发状态
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    创建人
+                    负责人
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    成本(元/包)
+                    预估成本
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    焦油量(mg)
+                    完成度(%)
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     更新时间
@@ -251,7 +252,7 @@ export default function Home() {
                       {module.price}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-900">
-                      {module.usage}
+                      {module.usage}%
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-gray-500 text-sm">
                       {module.updateTime}

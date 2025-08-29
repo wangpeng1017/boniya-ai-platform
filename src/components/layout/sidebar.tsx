@@ -20,12 +20,6 @@ import {
 
 const navigationItems = [
   {
-    title: '叶组配方管理',
-    href: '/',
-    icon: Home,
-    description: '配方创建、编辑、版本控制'
-  },
-  {
     title: '门店销售数量预测',
     href: '/sales-forecast',
     icon: BarChart3,
@@ -88,7 +82,8 @@ export function Sidebar() {
       <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
         {navigationItems.map((item, index) => {
           const Icon = item.icon
-          const isActive = pathname === item.href
+          // 如果在主页，高亮第一个业务模块
+          const isActive = pathname === item.href || (pathname === '/' && index === 0)
 
           return (
             <Link
