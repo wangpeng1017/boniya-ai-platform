@@ -11,8 +11,8 @@ export async function GET(request: NextRequest) {
     const offset = parseInt(searchParams.get('offset') || '0')
 
     // 构建查询条件
-    let whereConditions = []
-    let params = []
+    const whereConditions = []
+    const params = []
     let paramIndex = 1
 
     if (product_id) {
@@ -136,11 +136,11 @@ export async function POST(request: NextRequest) {
         `
 
         // 处理关键词数据
-        const keywordMap = {}
+        const keywordMap: Record<string, number> = {}
         keywordStats.rows.forEach(row => {
           if (row.keywords) {
-            const keywords = JSON.parse(row.keywords)
-            keywords.forEach(keyword => {
+            const keywords: string[] = JSON.parse(row.keywords)
+            keywords.forEach((keyword: string) => {
               keywordMap[keyword] = (keywordMap[keyword] || 0) + row.frequency
             })
           }

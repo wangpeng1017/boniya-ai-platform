@@ -5,11 +5,11 @@ import { sql } from '@vercel/postgres'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { 
-      product_id = '10032280299715', 
-      product_url = 'https://item.jd.com/10032280299715.html',
-      max_pages = 10,
-      days_limit = 30 
+    const {
+      product_id = '10032280299715',
+      product_url = 'https://item.jd.com/10032280299715.html'
+      // max_pages = 10,  // 暂时未使用
+      // days_limit = 30  // 暂时未使用
     } = body
 
     // 基础验证
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
             user_id: 'user_001',
             comment_id: `comment_${Date.now()}_1`,
             comment_content: '这个商品质量很好，包装也很精美，物流速度很快！',
-            comment_time: new Date(),
+            comment_time: new Date().toISOString(),
             star_rating: 5,
             useful_vote_count: 12,
             reply_count: 2,
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
             user_id: 'user_002', 
             comment_id: `comment_${Date.now()}_2`,
             comment_content: '价格有点贵，但是质量确实不错，值得购买。',
-            comment_time: new Date(),
+            comment_time: new Date().toISOString(),
             star_rating: 4,
             useful_vote_count: 8,
             reply_count: 1,
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
             user_id: 'user_003',
             comment_id: `comment_${Date.now()}_3`, 
             comment_content: '收到货发现有点问题，客服态度还可以，正在处理中。',
-            comment_time: new Date(),
+            comment_time: new Date().toISOString(),
             star_rating: 3,
             useful_vote_count: 5,
             reply_count: 0,
@@ -120,10 +120,11 @@ export async function POST(request: NextRequest) {
 
       } catch (error) {
         console.error('模拟爬取过程失败:', error)
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
         await sql`
-          UPDATE jd_crawl_tasks 
-          SET task_status = 'failed', 
-              error_message = ${error.message},
+          UPDATE jd_crawl_tasks
+          SET task_status = 'failed',
+              error_message = ${errorMessage},
               end_time = CURRENT_TIMESTAMP
           WHERE id = ${taskId}
         `

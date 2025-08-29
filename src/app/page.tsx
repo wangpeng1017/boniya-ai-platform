@@ -72,26 +72,20 @@ export default function Home() {
           </div>
 
           <div style={{ backgroundColor: '#e8f0ff', padding: '20px', borderRadius: '8px' }}>
-            <h2 style={{ color: '#1a365d', marginBottom: '10px' }}>🚀 快速操作</h2>
+            <h2 style={{ color: '#1a365d', marginBottom: '10px' }}>🚀 快速操作说明</h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '10px' }}>
-              <button
-                onclick="fetch('/api/db/init', {method: 'POST'}).then(r => r.json()).then(d => alert(JSON.stringify(d, null, 2)))"
-                style={{ padding: '10px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-              >
-                🏗️ 初始化数据库
-              </button>
-              <button
-                onclick="fetch('/api/crawlers/jd-comments', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({product_id: '10032280299715'})}).then(r => r.json()).then(d => alert(JSON.stringify(d, null, 2)))"
-                style={{ padding: '10px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-              >
-                🕷️ 启动爬虫任务
-              </button>
-              <button
-                onclick="fetch('/api/comments', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({product_id: '10032280299715', analysis_type: 'sentiment'})}).then(r => r.json()).then(d => alert(JSON.stringify(d, null, 2)))"
-                style={{ padding: '10px', backgroundColor: '#ffc107', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-              >
-                📊 情感分析
-              </button>
+              <div style={{ padding: '10px', backgroundColor: '#f8f9fa', border: '1px solid #ddd', borderRadius: '4px' }}>
+                <strong>🏗️ 初始化数据库</strong>
+                <p style={{ fontSize: '0.9rem', margin: '5px 0 0 0' }}>POST /api/db/init</p>
+              </div>
+              <div style={{ padding: '10px', backgroundColor: '#f8f9fa', border: '1px solid #ddd', borderRadius: '4px' }}>
+                <strong>🕷️ 启动爬虫任务</strong>
+                <p style={{ fontSize: '0.9rem', margin: '5px 0 0 0' }}>POST /api/crawlers/jd-comments</p>
+              </div>
+              <div style={{ padding: '10px', backgroundColor: '#f8f9fa', border: '1px solid #ddd', borderRadius: '4px' }}>
+                <strong>📊 情感分析</strong>
+                <p style={{ fontSize: '0.9rem', margin: '5px 0 0 0' }}>POST /api/comments</p>
+              </div>
             </div>
           </div>
 

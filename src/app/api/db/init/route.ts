@@ -127,12 +127,12 @@ export async function GET() {
     `
 
     // 获取各表的记录数
-    const stats = {}
+    const stats: Record<string, string | number> = {}
     for (const table of tables.rows) {
       try {
         const count = await sql.query(`SELECT COUNT(*) as count FROM ${table.table_name}`)
         stats[table.table_name] = count.rows[0].count
-      } catch (err) {
+      } catch {
         stats[table.table_name] = 'Error'
       }
     }
