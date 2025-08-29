@@ -38,28 +38,61 @@ export default function Home() {
             </div>
           </div>
 
-          <div style={{ backgroundColor: '#fff3cd', padding: '20px', borderRadius: '8px' }}>
-            <h2 style={{ color: '#856404', marginBottom: '10px' }}>🔗 API测试</h2>
-            <p style={{ color: '#856404', margin: '5px 0' }}>
-              <a href="/api/health" style={{ color: '#007bff', textDecoration: 'none' }}>
-                🔍 健康检查: /api/health
+          <div style={{ backgroundColor: '#fff3cd', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
+            <h2 style={{ color: '#856404', marginBottom: '10px' }}>🔗 系统API测试</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '10px' }}>
+              <a href="/api/health" style={{ color: '#007bff', textDecoration: 'none', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', display: 'block' }}>
+                🔍 健康检查
               </a>
-            </p>
-            <p style={{ color: '#856404', margin: '5px 0' }}>
-              <a href="/api/test" style={{ color: '#007bff', textDecoration: 'none' }}>
-                🧪 环境测试: /api/test
+              <a href="/api/test" style={{ color: '#007bff', textDecoration: 'none', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', display: 'block' }}>
+                🧪 环境测试
               </a>
-            </p>
-            <p style={{ color: '#856404', margin: '5px 0' }}>
-              <a href="/api/env-check" style={{ color: '#007bff', textDecoration: 'none' }}>
-                ⚙️ 环境变量检查: /api/env-check
+              <a href="/api/env-check" style={{ color: '#007bff', textDecoration: 'none', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', display: 'block' }}>
+                ⚙️ 环境变量检查
               </a>
-            </p>
-            <p style={{ color: '#856404', margin: '5px 0' }}>
-              <a href="/api/ai/gemini/test" style={{ color: '#007bff', textDecoration: 'none' }}>
-                🤖 AI测试: /api/ai/gemini/test
+              <a href="/api/ai/gemini/test" style={{ color: '#007bff', textDecoration: 'none', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', display: 'block' }}>
+                🤖 AI功能测试
               </a>
-            </p>
+            </div>
+          </div>
+
+          <div style={{ backgroundColor: '#e8f5e8', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
+            <h2 style={{ color: '#2d5a2d', marginBottom: '10px' }}>🗄️ 数据库API测试</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '10px' }}>
+              <a href="/api/db/init" style={{ color: '#007bff', textDecoration: 'none', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', display: 'block' }}>
+                🏗️ 数据库状态检查
+              </a>
+              <a href="/api/crawlers/jd-comments" style={{ color: '#007bff', textDecoration: 'none', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', display: 'block' }}>
+                🕷️ 爬虫任务列表
+              </a>
+              <a href="/api/comments?product_id=10032280299715" style={{ color: '#007bff', textDecoration: 'none', padding: '8px', border: '1px solid #ddd', borderRadius: '4px', display: 'block' }}>
+                💬 评论数据查询
+              </a>
+            </div>
+          </div>
+
+          <div style={{ backgroundColor: '#e8f0ff', padding: '20px', borderRadius: '8px' }}>
+            <h2 style={{ color: '#1a365d', marginBottom: '10px' }}>🚀 快速操作</h2>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '10px' }}>
+              <button
+                onclick="fetch('/api/db/init', {method: 'POST'}).then(r => r.json()).then(d => alert(JSON.stringify(d, null, 2)))"
+                style={{ padding: '10px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+              >
+                🏗️ 初始化数据库
+              </button>
+              <button
+                onclick="fetch('/api/crawlers/jd-comments', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({product_id: '10032280299715'})}).then(r => r.json()).then(d => alert(JSON.stringify(d, null, 2)))"
+                style={{ padding: '10px', backgroundColor: '#28a745', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+              >
+                🕷️ 启动爬虫任务
+              </button>
+              <button
+                onclick="fetch('/api/comments', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({product_id: '10032280299715', analysis_type: 'sentiment'})}).then(r => r.json()).then(d => alert(JSON.stringify(d, null, 2)))"
+                style={{ padding: '10px', backgroundColor: '#ffc107', color: 'black', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+              >
+                📊 情感分析
+              </button>
+            </div>
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '30px', color: '#888' }}>
