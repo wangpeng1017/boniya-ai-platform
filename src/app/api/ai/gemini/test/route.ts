@@ -4,60 +4,100 @@ import { geminiClient } from '@/lib/ai/gemini-client'
 // 测试Gemini API连接和功能
 export async function GET() {
   try {
-    // 检查API密钥是否配置
-    if (!process.env.GEMINI_API_KEY) {
+    // 详细的环境变量检查
+    const apiKey = process.env.GEMINI_API_KEY
+    const model = process.env.GEMINI_MODEL || 'gemini-2.5-pro'
+
+    console.log('Gemini API Test - Environment Check:')
+    console.log('API Key configured:', !!apiKey)
+    console.log('API Key length:', apiKey?.length || 0)
+    console.log('API Key prefix:', apiKey?.substring(0, 10) + '...')
+    console.log('Model:', model)
+
+    if (!apiKey) {
       return NextResponse.json(
-        { 
-          success: false, 
-          error: 'GEMINI_API_KEY not configured' 
+        {
+          success: false,
+          error: 'GEMINI_API_KEY not configured',
+          details: {
+            apiKeyConfigured: false,
+            model: model
+          }
         },
         { status: 500 }
       )
     }
 
-    // 执行健康检查
-    const isHealthy = await geminiClient.healthCheck()
-    
-    if (!isHealthy) {
+    // 手动测试API连接
+    console.log('Testing direct API connection...')
+    const testUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`
+
+    const testRequest = {
+      contents: [{
+        parts: [{
+          text: "Hello, please respond with 'API connection successful'"
+        }]
+      }],
+      generationConfig: {
+        temperature: 0.1,
+        maxOutputTokens: 50
+      }
+    }
+
+    const response = await fetch(testUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(testRequest)
+    })
+
+    console.log('API Response Status:', response.status)
+    console.log('API Response Headers:', Object.fromEntries(response.headers.entries()))
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error('API Error Response:', errorText)
+
       return NextResponse.json(
-        { 
-          success: false, 
-          error: 'Gemini API health check failed' 
+        {
+          success: false,
+          error: `Gemini API request failed: ${response.status} ${response.statusText}`,
+          details: {
+            status: response.status,
+            statusText: response.statusText,
+            apiKeyConfigured: true,
+            apiKeyLength: apiKey.length,
+            model: model,
+            errorResponse: errorText
+          }
         },
         { status: 500 }
       )
     }
 
-    // 测试基本功能
-    const testResults = await Promise.allSettled([
-      // 测试文本生成
-      geminiClient.generateContent('请用中文说"你好，我是波尼亚AI助手"'),
-      
-      // 测试情感分析
-      geminiClient.analyzeSentiment('这个产品质量很好，我很满意！'),
-      
-      // 测试关键词提取
-      geminiClient.extractKeywords('波尼亚AI平台是一个企业级的数据分析平台，集成了多种AI功能'),
-      
-      // 测试客服回复
-      geminiClient.generateCustomerServiceReply('我想了解一下你们的产品功能')
-    ])
+    const responseData = await response.json()
+    console.log('API Success Response:', responseData)
 
-    const results = {
-      textGeneration: testResults[0].status === 'fulfilled' ? testResults[0].value : 'Failed',
-      sentimentAnalysis: testResults[1].status === 'fulfilled' ? testResults[1].value : 'Failed',
-      keywordExtraction: testResults[2].status === 'fulfilled' ? testResults[2].value : 'Failed',
-      customerService: testResults[3].status === 'fulfilled' ? testResults[3].value : 'Failed'
+    // 如果直接API调用成功，再测试客户端
+    let clientHealthy = false
+    try {
+      clientHealthy = await geminiClient.healthCheck()
+    } catch (clientError) {
+      console.error('Client health check error:', clientError)
     }
 
     return NextResponse.json({
       success: true,
-      message: 'Gemini API测试完成',
-      config: {
-        model: process.env.GEMINI_MODEL,
-        apiKeyConfigured: !!process.env.GEMINI_API_KEY
+      message: 'Gemini API连接测试成功！',
+      details: {
+        apiKeyConfigured: true,
+        apiKeyLength: apiKey.length,
+        model: model,
+        directApiTest: 'SUCCESS',
+        clientHealthCheck: clientHealthy,
+        responsePreview: responseData.candidates?.[0]?.content?.parts?.[0]?.text || 'No response text'
       },
-      testResults: results,
       timestamp: new Date().toISOString()
     })
 

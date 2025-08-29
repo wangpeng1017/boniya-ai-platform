@@ -212,10 +212,24 @@ ${context ? `背景信息: ${context}` : ''}
    */
   async healthCheck(): Promise<boolean> {
     try {
-      await this.generateContent('Hello', { maxTokens: 10 })
+      console.log('Gemini health check - starting...')
+      console.log('API Key configured:', !!this.apiKey)
+      console.log('Model:', this.model)
+
+      if (!this.apiKey) {
+        console.error('Gemini health check - No API key configured')
+        return false
+      }
+
+      const result = await this.generateContent('Hello', { maxTokens: 10 })
+      console.log('Gemini health check - success:', result)
       return true
     } catch (error) {
       console.error('Gemini API health check failed:', error)
+      if (error instanceof Error) {
+        console.error('Error message:', error.message)
+        console.error('Error stack:', error.stack)
+      }
       return false
     }
   }
