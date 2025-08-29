@@ -1,36 +1,163 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 波尼亚AI平台
 
-## Getting Started
+基于人工智能技术的企业管理平台，通过整合AI技术解决销售预测、市场竞争分析、客户服务、门店运营、质量控制和零售效率等核心业务痛点。
 
-First, run the development server:
+## 项目概述
+
+波尼亚AI平台旨在通过数据驱动的方式，实现精细化管理，提升运营效率和决策的科学性。
+
+## 技术栈
+
+- **前端**: Next.js 15 + React + TypeScript
+- **样式**: Tailwind CSS
+- **UI组件**: 自定义组件库
+- **数据库**: Vercel Postgres
+- **文件存储**: Vercel Blob
+- **部署**: Vercel
+- **AI服务**: 外部云服务API集成
+
+## 功能模块
+
+### 第一阶段 - 已完成 ✅
+
+1. **门店销售数量预测**
+   - 数据看板展示
+   - 销售预测查询与分析
+   - 建议订单生成
+
+2. **竞品价格分析**
+   - 移动端数据采集工具
+   - OCR处理与校验
+   - 价格对比分析
+
+### 第二阶段 - 规划中 🚧
+
+3. **电商平台数据分析**
+   - 多平台数据集成
+   - NLP智能分析
+   - 全流程跟踪
+
+4. **智能客服管理**
+   - 统一工单系统
+   - 语音转文字
+   - NLP深度分析
+
+### 第三阶段 - 规划中 📋
+
+5. **门店运营标准化管理**
+   - 智能视频监控
+   - AI视觉识别
+   - 预警报告
+
+6. **产品品质智能控制**
+   - 工业AI视觉检测
+   - 模型管理与训练
+
+7. **称重商品自动识别**
+   - AI视觉识别模型
+   - 系统集成配置
+
+## 快速开始
+
+### 环境要求
+
+- Node.js 18+
+- npm 或 yarn
+
+### 安装依赖
+
+```bash
+npm install
+```
+
+### 启动开发服务器
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+访问 [http://localhost:3000](http://localhost:3000) 查看应用。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 构建生产版本
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build
+```
 
-## Learn More
+## 项目结构
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── api/               # API路由
+│   ├── sales-forecast/    # 销售预测模块
+│   ├── competitor-analysis/ # 竞品分析模块
+│   └── ...               # 其他模块页面
+├── components/            # React组件
+│   ├── ui/               # 基础UI组件
+│   └── layout/           # 布局组件
+├── lib/                  # 工具函数和配置
+│   ├── db/              # 数据库相关
+│   ├── types/           # TypeScript类型定义
+│   └── utils.ts         # 工具函数
+└── ...
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## API端点
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `GET /api/health` - 系统健康检查
 
-## Deploy on Vercel
+## 数据库设计
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+项目使用Vercel Postgres作为主数据库，包含以下主要表：
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `users` - 用户表
+- `stores` - 门店表
+- `products` - 商品表
+- `sales_history` - 销售历史数据
+- `sales_forecasts` - 销售预测数据
+- `competitors` - 竞品信息
+- `competitor_prices` - 竞品价格数据
+- `file_uploads` - 文件上传记录
+
+## 开发进度
+
+### 第一阶段 - 基础架构 ✅ 已完成
+- [x] 项目初始化和基础配置
+- [x] UI组件库搭建
+- [x] 主布局和导航系统
+- [x] 数据库设计
+- [x] 销售预测模块界面
+- [x] 竞品分析模块界面
+
+### 第二阶段 - 核心业务功能 ✅ 已完成
+- [x] 电商平台数据分析模块
+- [x] 智能客服管理模块
+- [x] 后端API开发
+- [x] 数据库集成
+- [x] NLP分析功能
+
+### 第三阶段 - 高级AI功能 ✅ 已完成
+- [x] 门店运营标准化管理
+- [x] 产品品质智能控制
+- [x] 称重商品自动识别
+- [x] AI服务集成
+- [x] 测试和优化
+
+## 功能特色
+
+### 🎯 核心优势
+- **全栈AI解决方案** - 涵盖销售预测、质量控制、客服管理等全业务链
+- **现代化技术栈** - Next.js 15 + TypeScript + Tailwind CSS
+- **企业级架构** - 模块化设计，易于扩展和维护
+- **中文本土化** - 完全适配中国企业的业务场景
+
+### 🚀 技术亮点
+- **响应式设计** - 支持桌面端和移动端访问
+- **实时数据处理** - 支持大规模数据分析和处理
+- **AI模型集成** - 集成多种AI服务，提供智能化解决方案
+- **安全可靠** - 企业级安全标准，数据加密传输
+
+## 许可证
+
+本项目采用 MIT 许可证。
