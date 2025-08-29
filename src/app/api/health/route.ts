@@ -17,11 +17,12 @@ export async function GET() {
         'product-recognition': '称重商品自动识别'
       }
     })
-  } catch (error) {
+  } catch (err) {
+    console.error('Health check failed:', err)
     return NextResponse.json(
-      { 
-        success: false, 
-        error: 'Internal server error' 
+      {
+        success: false,
+        error: 'Internal server error'
       },
       { status: 500 }
     )
