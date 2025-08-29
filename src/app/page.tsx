@@ -51,6 +51,11 @@ export default function Home() {
               </a>
             </p>
             <p style={{ color: '#856404', margin: '5px 0' }}>
+              <a href="/api/env-check" style={{ color: '#007bff', textDecoration: 'none' }}>
+                ⚙️ 环境变量检查: /api/env-check
+              </a>
+            </p>
+            <p style={{ color: '#856404', margin: '5px 0' }}>
               <a href="/api/ai/gemini/test" style={{ color: '#007bff', textDecoration: 'none' }}>
                 🤖 AI测试: /api/ai/gemini/test
               </a>
