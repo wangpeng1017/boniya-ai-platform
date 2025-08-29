@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { geminiClient } from '@/lib/ai/gemini-client'
 
 // 测试Gemini API连接和功能
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // 检查API密钥是否配置
     if (!process.env.GEMINI_API_KEY) {

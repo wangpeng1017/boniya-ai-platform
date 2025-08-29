@@ -36,7 +36,9 @@ export class GeminiClient {
     this.apiKey = process.env.GEMINI_API_KEY || ''
     this.model = process.env.GEMINI_MODEL || 'gemini-2.5-pro'
     this.baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models'
-    
+  }
+
+  private checkApiKey(): void {
     if (!this.apiKey) {
       throw new Error('GEMINI_API_KEY environment variable is required')
     }
@@ -49,6 +51,8 @@ export class GeminiClient {
     temperature?: number
     maxTokens?: number
   }): Promise<string> {
+    this.checkApiKey()
+
     try {
       const request: GeminiRequest = {
         contents: [{
