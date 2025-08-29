@@ -6,36 +6,29 @@ import { Input } from '@/components/ui/input'
 
 export function Header() {
   return (
-    <header className="flex h-16 items-center justify-between border-b bg-white px-6 shadow-sm">
-      {/* Search */}
-      <div className="flex flex-1 items-center space-x-4">
-        <div className="relative max-w-md">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          <Input
-            placeholder="搜索功能或数据..."
-            className="pl-10"
-          />
-        </div>
+    <header className="flex h-16 items-center justify-between border-b bg-white px-6">
+      {/* Left side - Menu toggle and breadcrumb */}
+      <div className="flex items-center space-x-4">
+        <Button variant="ghost" size="icon" className="text-gray-500">
+          <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </Button>
       </div>
 
       {/* Right side actions */}
       <div className="flex items-center space-x-4">
         {/* Notifications */}
-        <Button variant="ghost" size="icon" className="relative">
+        <Button variant="ghost" size="icon" className="relative text-gray-500">
           <Bell className="h-5 w-5" />
-          <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-red-500 text-xs"></span>
+          <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-red-500"></span>
         </Button>
 
-        {/* User menu */}
-        <Button variant="ghost" size="icon">
-          <User className="h-5 w-5" />
-        </Button>
-
-        {/* User info */}
-        <div className="flex items-center space-x-2">
-          <div className="text-right">
-            <div className="text-sm font-medium">管理员</div>
-            <div className="text-xs text-gray-500">admin@boniya.com</div>
+        {/* User info and avatar */}
+        <div className="flex items-center space-x-3">
+          <span className="text-sm text-gray-700">系统管理员</span>
+          <div className="h-8 w-8 rounded-full bg-gray-300 flex items-center justify-center">
+            <User className="h-4 w-4 text-gray-600" />
           </div>
         </div>
       </div>

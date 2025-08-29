@@ -16,105 +16,101 @@ import {
 
 const navigationItems = [
   {
-    title: '门店销售数量预测',
-    href: '/sales-forecast',
+    title: '数字化研发设计看板',
+    href: '/',
     icon: BarChart3,
-    description: '基于历史数据预测销售量，优化库存管理'
+    isActive: true
   },
   {
-    title: '竞品价格分析',
-    href: '/competitor-analysis',
+    title: '数字化研发业务平台',
+    href: '/business-platform',
     icon: TrendingUp,
-    description: '多维度竞品价格收集与分析'
+    children: [
+      { title: '数字化研发设计看板', href: '/design-dashboard' },
+      { title: '设计智能数字化', href: '/design-intelligence' },
+      { title: '叶组配方数字化设计', href: '/formula-design' },
+      { title: '市场营销数字化设计', href: '/marketing-design' },
+      { title: '三纸一特数字化设计', href: '/paper-design' },
+      { title: '加工工艺数字化设计', href: '/process-design' },
+      { title: '包装材料数字化设计', href: '/packaging-design' },
+      { title: '企业与输出数字化', href: '/enterprise-output' }
+    ]
   },
   {
-    title: '电商平台数据分析',
-    href: '/ecommerce-analysis',
+    title: '数字化研发设计平台',
+    href: '/design-platform',
     icon: ShoppingCart,
-    description: '整合多平台售后反馈，发现共性问题'
-  },
-  {
-    title: '智能客服管理',
-    href: '/customer-service',
-    icon: MessageSquare,
-    description: '统一管理客户投诉与反馈，智能分析'
-  },
-  {
-    title: '门店运营标准化管理',
-    href: '/store-operations',
-    icon: Store,
-    description: '智能监控门店标准化执行情况'
-  },
-  {
-    title: '产品品质智能控制',
-    href: '/quality-control',
-    icon: Shield,
-    description: 'AI视觉检测提升品质控制效率'
-  },
-  {
-    title: '称重商品自动识别',
-    href: '/product-recognition',
-    icon: Scale,
-    description: '自动识别称重商品，提升收银效率'
-  },
-  {
-    title: '京东爬虫监控',
-    href: '/crawlers/jd-monitor',
-    icon: Eye,
-    description: '监控京东评论数据爬取任务状态'
-  },
+    children: []
+  }
 ]
 
 export function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <div className="flex h-full w-64 flex-col bg-gray-900 text-white">
+    <div className="flex h-full w-64 flex-col bg-white border-r border-gray-200">
       {/* Logo */}
-      <div className="flex h-16 items-center justify-center border-b border-gray-700">
-        <h1 className="text-xl font-bold text-blue-400">波尼亚AI平台</h1>
+      <div className="flex h-16 items-center px-6 border-b border-gray-200">
+        <h1 className="text-lg font-semibold text-gray-900">数字化研发平台</h1>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 space-y-1 px-2 py-4">
-        {navigationItems.map((item) => {
+      <nav className="flex-1 px-4 py-4 space-y-1">
+        {navigationItems.map((item, index) => {
           const Icon = item.icon
-          const isActive = pathname === item.href
-          
+          const isActive = item.isActive || pathname === item.href
+
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                'group flex items-center rounded-md px-2 py-2 text-sm font-medium transition-colors',
-                isActive
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-300 hover:bg-gray-700 hover:text-white'
-              )}
-            >
-              <Icon
+            <div key={index}>
+              <Link
+                href={item.href}
                 className={cn(
-                  'mr-3 h-5 w-5 flex-shrink-0',
-                  isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'
+                  'group flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors',
+                  isActive
+                    ? 'bg-blue-50 text-blue-700 border-l-4 border-blue-700'
+                    : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
                 )}
-              />
-              <div className="flex-1">
-                <div className="truncate">{item.title}</div>
-                <div className="text-xs text-gray-400 group-hover:text-gray-300">
-                  {item.description}
+              >
+                <Icon
+                  className={cn(
+                    'mr-3 h-4 w-4 flex-shrink-0',
+                    isActive ? 'text-blue-700' : 'text-gray-400 group-hover:text-gray-500'
+                  )}
+                />
+                <span className="truncate">{item.title}</span>
+                {item.children && item.children.length > 0 && (
+                  <svg
+                    className={cn(
+                      'ml-auto h-4 w-4 transition-transform',
+                      isActive ? 'rotate-90' : ''
+                    )}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                )}
+              </Link>
+
+              {/* Submenu */}
+              {item.children && item.children.length > 0 && isActive && (
+                <div className="ml-6 mt-1 space-y-1">
+                  {item.children.map((child, childIndex) => (
+                    <Link
+                      key={childIndex}
+                      href={child.href}
+                      className="block px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md"
+                    >
+                      {child.title}
+                    </Link>
+                  ))}
                 </div>
-              </div>
-            </Link>
+              )}
+            </div>
           )
         })}
       </nav>
-
-      {/* Footer */}
-      <div className="border-t border-gray-700 p-4">
-        <div className="text-xs text-gray-400">
-          © 2024 波尼亚AI平台
-        </div>
-      </div>
     </div>
   )
 }
