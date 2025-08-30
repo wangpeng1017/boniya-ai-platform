@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { BarChart3, TrendingUp, Calendar, Store, RefreshCw, Download, AlertCircle } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
@@ -44,6 +43,8 @@ export default function SalesForecastPage() {
     is_holiday: false,
     is_promotion: false
   })
+
+
 
   const handleForecast = async () => {
     setLoading(true)
@@ -142,39 +143,62 @@ export default function SalesForecastPage() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="store">选择门店</Label>
-                <Select value={formData.store_id} onChange={(e) => setFormData({...formData, store_id: e.target.value})}>
-                  <SelectItem value="qingdao_chengyang">青岛市城阳区利客来城阳直营专柜</SelectItem>
-                </Select>
+                <select
+                  id="store"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2"
+                  value={formData.store_id}
+                  onChange={(e) => setFormData({...formData, store_id: e.target.value})}
+                >
+                  <option value="qingdao_chengyang">青岛市城阳区利客来城阳直营专柜</option>
+                  <option value="qingdao_licang">青岛市李沧区大润发专柜</option>
+                  <option value="qingdao_shibei">青岛市市北区家乐福专柜</option>
+                  <option value="qingdao_huangdao">青岛市黄岛区沃尔玛专柜</option>
+                </select>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="product">商品类别</Label>
-                <Select value={formData.product_category} onChange={(e) => setFormData({...formData, product_category: e.target.value})}>
-                  <SelectItem value="ham">火腿类（德国黑森林火腿、法国皇家火腿等）</SelectItem>
-                  <SelectItem value="sausage">香肠类（蒜味烤肠、维也纳香肠、肉枣肠等）</SelectItem>
-                  <SelectItem value="cooked">熟食类（猪头肉、酱猪耳、老汤牛肉等）</SelectItem>
-                  <SelectItem value="soup">汤品类（牛肉汤、大肠汤）</SelectItem>
-                  <SelectItem value="packaged">包装食品（流亭猪蹄、肉丸等）</SelectItem>
-                  <SelectItem value="all">全部类别</SelectItem>
-                </Select>
+                <select
+                  id="product"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2"
+                  value={formData.product_category}
+                  onChange={(e) => setFormData({...formData, product_category: e.target.value})}
+                >
+                  <option value="ham">火腿类（德国黑森林火腿、法国皇家火腿等）</option>
+                  <option value="sausage">香肠类（蒜味烤肠、维也纳香肠、肉枣肠等）</option>
+                  <option value="cooked">熟食类（猪头肉、酱猪耳、老汤牛肉等）</option>
+                  <option value="soup">汤品类（牛肉汤、大肠汤）</option>
+                  <option value="packaged">包装食品（流亭猪蹄、肉丸等）</option>
+                  <option value="all">全部类别</option>
+                </select>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="period">预测周期</Label>
-                <Select value={formData.forecast_days.toString()} onChange={(e) => setFormData({...formData, forecast_days: parseInt(e.target.value)})}>
-                  <SelectItem value="7">未来7天</SelectItem>
-                  <SelectItem value="14">未来14天</SelectItem>
-                  <SelectItem value="30">未来30天</SelectItem>
-                </Select>
+                <select
+                  id="period"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2"
+                  value={formData.forecast_days.toString()}
+                  onChange={(e) => setFormData({...formData, forecast_days: parseInt(e.target.value)})}
+                >
+                  <option value="7">未来7天</option>
+                  <option value="14">未来14天</option>
+                  <option value="30">未来30天</option>
+                </select>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="weather">天气条件</Label>
-                <Select value={formData.weather_condition} onChange={(e) => setFormData({...formData, weather_condition: e.target.value})}>
-                  <SelectItem value="good">晴好天气</SelectItem>
-                  <SelectItem value="normal">正常天气</SelectItem>
-                  <SelectItem value="bad">恶劣天气</SelectItem>
-                </Select>
+                <select
+                  id="weather"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2"
+                  value={formData.weather_condition}
+                  onChange={(e) => setFormData({...formData, weather_condition: e.target.value})}
+                >
+                  <option value="good">晴好天气</option>
+                  <option value="normal">正常天气</option>
+                  <option value="bad">恶劣天气</option>
+                </select>
               </div>
 
               <div className="space-y-2">
