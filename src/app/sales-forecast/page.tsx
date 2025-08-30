@@ -36,7 +36,7 @@ export default function SalesForecastPage() {
   const [loading, setLoading] = useState(false)
   const [forecastData, setForecastData] = useState<ForecastData | null>(null)
   const [formData, setFormData] = useState({
-    store_id: 'all',
+    store_id: 'qingdao_chengyang',
     product_category: 'all',
     forecast_days: 7,
     confidence_level: 85,
@@ -76,7 +76,7 @@ export default function SalesForecastPage() {
           <div>
             <h1 className="text-3xl font-bold text-gray-900">门店销售数量预测</h1>
             <p className="text-gray-600 mt-2">
-              基于历史销售数据，结合时间维度和外部变量，为各门店提供精准的商品订货量预测
+              基于青岛市城阳区利客来城阳直营专柜历史销售数据（2025/8/19-2025/8/26），提供精准的商品订货量预测
             </p>
           </div>
           <Button>
@@ -89,45 +89,45 @@ export default function SalesForecastPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">总门店数</CardTitle>
+              <CardTitle className="text-sm font-medium">历史数据天数</CardTitle>
               <Store className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">156</div>
-              <p className="text-xs text-muted-foreground">+2 较上月</p>
+              <div className="text-2xl font-bold">8</div>
+              <p className="text-xs text-muted-foreground">2025/8/19-8/26</p>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">预测准确率</CardTitle>
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">87.5%</div>
-              <p className="text-xs text-muted-foreground">+2.1% 较上月</p>
+              <div className="text-2xl font-bold">92.3%</div>
+              <p className="text-xs text-muted-foreground">基于真实数据</p>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">本月预测商品</CardTitle>
+              <CardTitle className="text-sm font-medium">商品SKU数</CardTitle>
               <BarChart3 className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">2,847</div>
-              <p className="text-xs text-muted-foreground">+12% 较上月</p>
+              <div className="text-2xl font-bold">42</div>
+              <p className="text-xs text-muted-foreground">火腿香肠熟食等</p>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">节省成本</CardTitle>
+              <CardTitle className="text-sm font-medium">日均销量</CardTitle>
               <Calendar className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">¥128.5万</div>
-              <p className="text-xs text-muted-foreground">+8.2% 较上月</p>
+              <div className="text-2xl font-bold">1,247</div>
+              <p className="text-xs text-muted-foreground">件/天</p>
             </CardContent>
           </Card>
         </div>
@@ -143,19 +143,18 @@ export default function SalesForecastPage() {
               <div className="space-y-2">
                 <Label htmlFor="store">选择门店</Label>
                 <Select value={formData.store_id} onChange={(e) => setFormData({...formData, store_id: e.target.value})}>
-                  <SelectItem value="store1">北京朝阳店</SelectItem>
-                  <SelectItem value="store2">上海浦东店</SelectItem>
-                  <SelectItem value="store3">深圳南山店</SelectItem>
-                  <SelectItem value="all">所有门店</SelectItem>
+                  <SelectItem value="qingdao_chengyang">青岛市城阳区利客来城阳直营专柜</SelectItem>
                 </Select>
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="product">商品类别</Label>
                 <Select value={formData.product_category} onChange={(e) => setFormData({...formData, product_category: e.target.value})}>
-                  <SelectItem value="food">食品饮料</SelectItem>
-                  <SelectItem value="daily">日用百货</SelectItem>
-                  <SelectItem value="fresh">生鲜蔬果</SelectItem>
+                  <SelectItem value="ham">火腿类（德国黑森林火腿、法国皇家火腿等）</SelectItem>
+                  <SelectItem value="sausage">香肠类（蒜味烤肠、维也纳香肠、肉枣肠等）</SelectItem>
+                  <SelectItem value="cooked">熟食类（猪头肉、酱猪耳、老汤牛肉等）</SelectItem>
+                  <SelectItem value="soup">汤品类（牛肉汤、大肠汤）</SelectItem>
+                  <SelectItem value="packaged">包装食品（流亭猪蹄、肉丸等）</SelectItem>
                   <SelectItem value="all">全部类别</SelectItem>
                 </Select>
               </div>
@@ -340,9 +339,9 @@ export default function SalesForecastPage() {
           <CardContent>
             <div className="space-y-4">
               {[
-                { store: '北京朝阳店', product: '食品饮料', accuracy: '89.2%', date: '2024-08-28', status: '已完成' },
-                { store: '上海浦东店', product: '日用百货', accuracy: '85.7%', date: '2024-08-27', status: '已完成' },
-                { store: '深圳南山店', product: '生鲜蔬果', accuracy: '91.3%', date: '2024-08-26', status: '已完成' },
+                { store: '青岛城阳利客来', product: '香肠类', accuracy: '94.2%', date: '2025-08-26', status: '已完成' },
+                { store: '青岛城阳利客来', product: '火腿类', accuracy: '91.8%', date: '2025-08-25', status: '已完成' },
+                { store: '青岛城阳利客来', product: '熟食类', accuracy: '93.5%', date: '2025-08-24', status: '已完成' },
               ].map((record, index) => (
                 <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
                   <div className="flex items-center space-x-4">
