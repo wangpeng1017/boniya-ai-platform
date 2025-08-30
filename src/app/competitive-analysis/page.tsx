@@ -183,7 +183,7 @@ export default function CompetitiveAnalysisPage() {
           <div>
             <h1 className="text-3xl font-bold text-gray-900">竞品价格分析</h1>
             <p className="text-gray-600 mt-2">
-              系统化、多维度地对主要竞品的价格进行收集与分析，快速应对市场变化
+              基于青岛地区波尼亚与喜旺品牌真实价格数据，提供精准的竞争分析和定价建议
             </p>
           </div>
           <div className="flex space-x-2">
@@ -202,58 +202,50 @@ export default function CompetitiveAnalysisPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">监控商品数</CardTitle>
+              <CardTitle className="text-sm font-medium">波尼亚产品数</CardTitle>
               <Search className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
-                {analysisSummary?.overview.total_products || 0}
-              </div>
-              <p className="text-xs text-muted-foreground">总监控商品</p>
+              <div className="text-2xl font-bold">30</div>
+              <p className="text-xs text-muted-foreground">青岛地区SKU</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">价格优势商品</CardTitle>
+              <CardTitle className="text-sm font-medium">价格优势产品</CardTitle>
               <TrendingUp className="h-4 w-4 text-green-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-green-600">
-                {analysisSummary?.overview.advantage_rate.toFixed(1) || 0}%
-              </div>
+              <div className="text-2xl font-bold text-green-600">6</div>
               <p className="text-xs text-muted-foreground">
-                {analysisSummary?.overview.advantage_count || 0} 个商品
+                城阳即墨地区优势
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">价格劣势商品</CardTitle>
-              <TrendingDown className="h-4 w-4 text-red-600" />
+              <CardTitle className="text-sm font-medium">价格持平产品</CardTitle>
+              <Minus className="h-4 w-4 text-blue-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-red-600">
-                {analysisSummary ? (100 - analysisSummary.overview.advantage_rate).toFixed(1) : 0}%
-              </div>
+              <div className="text-2xl font-bold text-blue-600">6</div>
               <p className="text-xs text-muted-foreground">
-                {analysisSummary?.overview.disadvantage_count || 0} 个商品
+                青岛办事处持平
               </p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">平均价差</CardTitle>
-              <Minus className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">独有产品</CardTitle>
+              <TrendingUp className="h-4 w-4 text-purple-600" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">
-                {analysisSummary?.overview.avg_price_difference || '0'}%
-              </div>
+              <div className="text-2xl font-bold text-purple-600">18</div>
               <p className="text-xs text-muted-foreground">
-                {parseFloat(analysisSummary?.overview.avg_price_difference || '0') > 0 ? '高于竞品' : '优于竞品'}
+                喜旺无对应竞品
               </p>
             </CardContent>
           </Card>
@@ -279,10 +271,13 @@ export default function CompetitiveAnalysisPage() {
                 <Label htmlFor="category">商品类别</Label>
                 <select className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2">
                   <option>全部类别</option>
-                  <option>食品饮料</option>
-                  <option>日用百货</option>
-                  <option>生鲜蔬果</option>
-                  <option>服装鞋帽</option>
+                  <option>火腿类</option>
+                  <option>烤肠类</option>
+                  <option>香肠类</option>
+                  <option>红肠类</option>
+                  <option>熟食类</option>
+                  <option>汤品类</option>
+                  <option>包装食品</option>
                 </select>
               </div>
               <div className="flex items-end">
@@ -302,71 +297,123 @@ export default function CompetitiveAnalysisPage() {
             <div className="space-y-4">
               {[
                 {
-                  name: '可口可乐 330ml',
-                  ourPrice: 3.50,
+                  name: '德国黑森林火腿 200g',
+                  ourPrice: 29.9,
+                  category: '火腿类',
+                  region: '青岛办事处',
                   competitors: [
-                    { name: '沃尔玛', price: 3.80, trend: 'up' },
-                    { name: '家乐福', price: 3.60, trend: 'down' },
-                    { name: '大润发', price: 3.45, trend: 'stable' }
+                    { name: '喜旺', price: 29.9, trend: 'stable', status: '价格相同' }
+                  ],
+                  advantage: null,
+                  isEqual: true
+                },
+                {
+                  name: '维也纳香肠 160g',
+                  ourPrice: 7.9,
+                  category: '香肠类',
+                  region: '青岛办事处',
+                  competitors: [
+                    { name: '喜旺', price: 7.9, trend: 'stable', status: '价格相同' }
+                  ],
+                  advantage: null,
+                  isEqual: true
+                },
+                {
+                  name: '猪头肉 200g',
+                  ourPrice: 15.9,
+                  category: '熟食类',
+                  region: '青岛办事处',
+                  competitors: [],
+                  advantage: null,
+                  isUnique: true
+                },
+                {
+                  name: '蒜味烤肠 160g (城阳即墨)',
+                  ourPrice: 7.5,
+                  category: '烤肠类',
+                  region: '城阳即墨',
+                  competitors: [
+                    { name: '喜旺', price: 7.9, trend: 'stable', status: '波尼亚更优' }
                   ],
                   advantage: true
                 },
                 {
-                  name: '农夫山泉 550ml',
-                  ourPrice: 2.80,
-                  competitors: [
-                    { name: '沃尔玛', price: 2.50, trend: 'stable' },
-                    { name: '家乐福', price: 2.60, trend: 'up' },
-                    { name: '大润发', price: 2.55, trend: 'down' }
-                  ],
-                  advantage: false
-                },
-                {
-                  name: '统一方便面',
-                  ourPrice: 4.20,
-                  competitors: [
-                    { name: '沃尔玛', price: 4.50, trend: 'up' },
-                    { name: '家乐福', price: 4.30, trend: 'stable' },
-                    { name: '大润发', price: 4.40, trend: 'up' }
-                  ],
-                  advantage: true
+                  name: '流亭猪蹄 300g',
+                  ourPrice: 16.9,
+                  category: '包装食品',
+                  region: '青岛办事处',
+                  competitors: [],
+                  advantage: null,
+                  isUnique: true
                 }
               ].map((product, index) => (
                 <div key={index} className="border rounded-lg p-4">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center space-x-3">
                       <h3 className="font-medium">{product.name}</h3>
-                      <Badge variant={product.advantage ? "default" : "destructive"}>
-                        {product.advantage ? '价格优势' : '价格劣势'}
+                      <Badge variant="outline" className="text-xs">
+                        {product.category}
                       </Badge>
+                      <Badge variant="outline" className="text-xs">
+                        {product.region}
+                      </Badge>
+                      {product.isEqual && (
+                        <Badge variant="secondary">价格相同</Badge>
+                      )}
+                      {product.advantage === true && (
+                        <Badge variant="default">波尼亚优势</Badge>
+                      )}
+                      {product.advantage === false && (
+                        <Badge variant="destructive">价格劣势</Badge>
+                      )}
+                      {product.isUnique && (
+                        <Badge variant="outline" className="bg-green-50 text-green-700">波尼亚独有</Badge>
+                      )}
                     </div>
                     <div className="text-lg font-bold text-blue-600">
                       ¥{product.ourPrice.toFixed(2)}
                     </div>
                   </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {product.competitors.map((competitor, idx) => (
-                      <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded">
-                        <div>
-                          <p className="font-medium">{competitor.name}</p>
-                          <p className="text-sm text-gray-500">竞争对手</p>
-                        </div>
-                        <div className="text-right">
-                          <div className="flex items-center space-x-1">
-                            <span className="font-medium">¥{competitor.price.toFixed(2)}</span>
-                            {competitor.trend === 'up' && <TrendingUp className="h-4 w-4 text-red-500" />}
-                            {competitor.trend === 'down' && <TrendingDown className="h-4 w-4 text-green-500" />}
-                            {competitor.trend === 'stable' && <Minus className="h-4 w-4 text-gray-500" />}
-                          </div>
-                          <p className="text-xs text-gray-500">
-                            {competitor.price > product.ourPrice ? '+' : ''}
-                            {((competitor.price - product.ourPrice) / product.ourPrice * 100).toFixed(1)}%
-                          </p>
-                        </div>
+
+                  {product.isUnique ? (
+                    <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <span className="text-green-700 font-medium">波尼亚独有产品</span>
                       </div>
-                    ))}
-                  </div>
+                      <p className="text-green-600 text-sm mt-1">
+                        喜旺无对应竞品，可利用产品独特性进行市场推广
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 gap-4">
+                      {product.competitors.map((competitor, idx) => (
+                        <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded">
+                          <div>
+                            <p className="font-medium">{competitor.name}</p>
+                            <p className="text-sm text-gray-500">{competitor.status}</p>
+                          </div>
+                          <div className="text-right">
+                            <div className="flex items-center space-x-1">
+                              <span className="font-medium">¥{competitor.price.toFixed(2)}</span>
+                              {competitor.trend === 'up' && <TrendingUp className="h-4 w-4 text-red-500" />}
+                              {competitor.trend === 'down' && <TrendingDown className="h-4 w-4 text-green-500" />}
+                              {competitor.trend === 'stable' && <Minus className="h-4 w-4 text-gray-500" />}
+                            </div>
+                            {!product.isEqual && (
+                              <p className="text-xs text-gray-500">
+                                {competitor.price > product.ourPrice ? '+' : ''}
+                                {((competitor.price - product.ourPrice) / product.ourPrice * 100).toFixed(1)}%
+                              </p>
+                            )}
+                            {product.isEqual && (
+                              <p className="text-xs text-blue-600">价格一致</p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
@@ -382,9 +429,10 @@ export default function CompetitiveAnalysisPage() {
           <CardContent>
             <div className="space-y-3">
               {[
-                { product: '可口可乐 330ml', type: '竞品降价', message: '沃尔玛价格下调至 ¥3.60', time: '2小时前', severity: 'high' },
-                { product: '农夫山泉 550ml', type: '价格劣势', message: '我方价格高于市场平均价 12%', time: '4小时前', severity: 'medium' },
-                { product: '统一方便面', type: '价格优势', message: '我方价格低于竞品平均价 8%', time: '1天前', severity: 'low' }
+                { product: '蒜味烤肠 160g (城阳即墨)', type: '价格优势', message: '波尼亚 ¥7.5 vs 喜旺 ¥7.9，优势 5.1%', time: '1小时前', severity: 'low' },
+                { product: '德国黑森林火腿 200g', type: '价格持平', message: '波尼亚与喜旺价格均为 ¥29.9，建议关注服务差异化', time: '3小时前', severity: 'medium' },
+                { product: '猪头肉 200g', type: '独有产品', message: '波尼亚独有产品 ¥15.9，喜旺无对应竞品', time: '6小时前', severity: 'low' },
+                { product: '法国皇家火腿 200g (城阳即墨)', type: '价格优势', message: '波尼亚 ¥25.9 vs 喜旺 ¥26.9，优势 3.7%', time: '1天前', severity: 'low' }
               ].map((alert, index) => (
                 <div key={index} className={`flex items-center justify-between p-3 rounded-lg border-l-4 ${
                   alert.severity === 'high' ? 'border-red-500 bg-red-50' :
