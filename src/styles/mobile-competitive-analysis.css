@@ -1,0 +1,212 @@
+/* 竞品价格分析移动端优化样式 */
+
+/* 移动端图片上传按钮优化 */
+@media (max-width: 768px) {
+  .mobile-upload-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+  }
+  
+  .mobile-upload-buttons button {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    border-radius: 0.75rem;
+  }
+  
+  /* 相机按钮特殊样式 */
+  .camera-button {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+  
+  .camera-button:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+  }
+  
+  /* OCR结果卡片移动端优化 */
+  .ocr-result-card {
+    margin: 0.5rem;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .ocr-result-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  /* 编辑表单移动端优化 */
+  .edit-form-mobile {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .edit-form-mobile input {
+    padding: 0.75rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    border: 2px solid #e5e7eb;
+  }
+  
+  .edit-form-mobile input:focus {
+    border-color: #3b82f6;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  /* 操作按钮移动端优化 */
+  .action-buttons-mobile {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  
+  .action-buttons-mobile button {
+    flex: 1;
+    min-width: 80px;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  /* 处理状态指示器 */
+  .processing-status {
+    position: sticky;
+    top: 1rem;
+    z-index: 10;
+    margin: 1rem;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .processing-status.uploading {
+    border-left: 4px solid #f59e0b;
+    background: #fef3c7;
+  }
+  
+  .processing-status.processing {
+    border-left: 4px solid #3b82f6;
+    background: #dbeafe;
+  }
+  
+  .processing-status.completed {
+    border-left: 4px solid #10b981;
+    background: #d1fae5;
+  }
+  
+  .processing-status.error {
+    border-left: 4px solid #ef4444;
+    background: #fee2e2;
+  }
+  
+  /* 竞品数据表格移动端优化 */
+  .competitor-table-mobile {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  
+  .competitor-card-mobile {
+    display: block;
+    margin: 0.5rem;
+    padding: 1rem;
+    border-radius: 0.75rem;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+  }
+  
+  .competitor-card-mobile:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+  }
+  
+  /* 价格对比显示优化 */
+  .price-comparison-mobile {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.5rem 0;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    background: #f9fafb;
+  }
+  
+  .price-advantage {
+    background: #d1fae5;
+    color: #065f46;
+  }
+  
+  .price-disadvantage {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  
+  .price-equal {
+    background: #f3f4f6;
+    color: #374151;
+  }
+  
+  /* 触摸友好的按钮尺寸 */
+  .touch-friendly {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* 加载动画优化 */
+  .loading-spinner-mobile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+  }
+  
+  .loading-spinner-mobile svg {
+    width: 2rem;
+    height: 2rem;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+/* 平板设备优化 */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .ocr-result-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .edit-form-mobile {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* 大屏设备优化 */
+@media (min-width: 1024px) {
+  .ocr-result-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .edit-form-mobile {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "crons": [
+    {
+      "path": "/api/crawlers/jd-comments/schedule",
+      "schedule": "0 3 * * *"
+    }
+  ],
+  "functions": {
+    "src/app/api/crawlers/jd-comments/route.ts": {
+      "maxDuration": 300
+    },
+    "src/app/api/crawlers/jd-comments/schedule/route.ts": {
+      "maxDuration": 600
+    }
+  },
+  "env": {
+    "PYTHON_VERSION": "3.9"
+  }
+}
