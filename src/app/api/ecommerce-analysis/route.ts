@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { sql } from '@vercel/postgres'
+import { executeSafeQuery } from '@/lib/db/connection'
 import { GeminiClient } from '@/lib/ai/gemini-client'
 
 // 电商平台数据分析API
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 保存分析结果
-    const result = await sql`
+    const result = await executeSafeQuery`
       INSERT INTO ecommerce_analysis (
         platform, product_name, analysis_type, data_source,
         analysis_result, created_at
@@ -67,16 +67,42 @@ export async function GET(request: NextRequest) {
     const whereClause = whereConditions.length > 0 ? 
       `WHERE ${whereConditions.join(' AND ')}` : ''
 
-    const result = await sql.query(`
-      SELECT * FROM ecommerce_analysis 
-      ${whereClause}
-      ORDER BY created_at DESC 
-      LIMIT ${limit}
-    `)
+    let result
+    if (whereConditions.length > 0) {
+      // 使用参数化查询避免SQL注入
+      if (platform && analysis_type) {
+        result = await executeSafeQuery`
+          SELECT * FROM ecommerce_analysis
+          WHERE platform = ${platform} AND analysis_type = ${analysis_type}
+          ORDER BY created_at DESC
+          LIMIT ${limit}
+        `
+      } else if (platform) {
+        result = await executeSafeQuery`
+          SELECT * FROM ecommerce_analysis
+          WHERE platform = ${platform}
+          ORDER BY created_at DESC
+          LIMIT ${limit}
+        `
+      } else if (analysis_type) {
+        result = await executeSafeQuery`
+          SELECT * FROM ecommerce_analysis
+          WHERE analysis_type = ${analysis_type}
+          ORDER BY created_at DESC
+          LIMIT ${limit}
+        `
+      }
+    } else {
+      result = await executeSafeQuery`
+        SELECT * FROM ecommerce_analysis
+        ORDER BY created_at DESC
+        LIMIT ${limit}
+      `
+    }
 
     return NextResponse.json({
       success: true,
-      data: result.rows
+      data: result?.rows || []
     })
 
   } catch (error) {
@@ -92,10 +118,10 @@ export async function GET(request: NextRequest) {
 async function analyzeCrawlerData(platform: string, product_name: string, analysis_type: string) {
   try {
     // 获取相关评论数据
-    const comments = await sql`
-      SELECT * FROM jd_comments 
+    const comments = await executeSafeQuery`
+      SELECT * FROM jd_comments
       WHERE product_name ILIKE ${'%' + product_name + '%'}
-      ORDER BY created_at DESC 
+      ORDER BY created_at DESC
       LIMIT 100
     `
 

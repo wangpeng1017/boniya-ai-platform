@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { sql } from '@vercel/postgres'
+import { executeSafeQuery, executeQuery } from '@/lib/db/connection'
 
 // TypeScript interfaces for sales forecast
 interface ForecastParams {
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     })
 
     // 保存预测任务记录
-    const taskResult = await sql`
+    const taskResult = await executeSafeQuery`
       INSERT INTO sales_forecasts (
         store_id, product_category, forecast_days, confidence_level,
         weather_condition, is_holiday, is_promotion, forecast_data,
@@ -108,22 +108,22 @@ export async function GET(request: NextRequest) {
     const store_id = searchParams.get('store_id')
     const limit = parseInt(searchParams.get('limit') || '10')
 
-    let query = `
-      SELECT * FROM sales_forecasts 
-      ORDER BY created_at DESC 
-      LIMIT ${limit}
-    `
+    let result
 
     if (store_id && store_id !== 'all') {
-      query = `
-        SELECT * FROM sales_forecasts 
-        WHERE store_id = '${store_id}'
-        ORDER BY created_at DESC 
+      result = await executeSafeQuery`
+        SELECT * FROM sales_forecasts
+        WHERE store_id = ${store_id}
+        ORDER BY created_at DESC
+        LIMIT ${limit}
+      `
+    } else {
+      result = await executeSafeQuery`
+        SELECT * FROM sales_forecasts
+        ORDER BY created_at DESC
         LIMIT ${limit}
       `
     }
-
-    const result = await sql.query(query)
 
     return NextResponse.json({
       success: true,
