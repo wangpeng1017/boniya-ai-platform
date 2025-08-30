@@ -1,6 +1,41 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { sql } from '@vercel/postgres'
 
+// TypeScript interfaces for sales forecast
+interface ForecastParams {
+  product_category: string
+  forecast_days: number
+  confidence_level: number
+  weather_condition: string
+  is_holiday: boolean
+  is_promotion: boolean
+}
+
+type CategoryBaseSales = {
+  [key: string]: number
+  ham: number
+  sausage: number
+  cooked: number
+  soup: number
+  packaged: number
+  all: number
+}
+
+interface CategoryAdvice {
+  highDemand: string
+  lowDemand: string
+  general: string
+}
+
+type CategoryAdviceMap = {
+  [key: string]: CategoryAdvice
+  sausage: CategoryAdvice
+  ham: CategoryAdvice
+  cooked: CategoryAdvice
+  soup: CategoryAdvice
+  packaged: CategoryAdvice
+}
+
 // 销售预测API
 export async function POST(request: NextRequest) {
   try {
@@ -17,7 +52,6 @@ export async function POST(request: NextRequest) {
 
     // 模拟AI预测算法
     const mockForecastData = generateMockForecast({
-      store_id,
       product_category,
       forecast_days,
       confidence_level,
@@ -106,11 +140,11 @@ export async function GET(request: NextRequest) {
 }
 
 // 基于青岛城阳门店真实数据的AI预测算法
-function generateMockForecast(params: any) {
+function generateMockForecast(params: ForecastParams) {
   const { product_category, forecast_days, confidence_level, weather_condition, is_holiday, is_promotion } = params
 
   // 基于真实历史数据的基础销量（2025/8/19-8/26平均值）
-  const categoryBaseSales = {
+  const categoryBaseSales: CategoryBaseSales = {
     'ham': 180,        // 火腿类日均销量
     'sausage': 320,    // 香肠类日均销量（热销品类）
     'cooked': 280,     // 熟食类日均销量
@@ -119,7 +153,7 @@ function generateMockForecast(params: any) {
     'all': 1247        // 全部类别日均销量
   }
 
-  let baseSales = categoryBaseSales[product_category] || categoryBaseSales['all']
+  let baseSales = categoryBaseSales[product_category as keyof CategoryBaseSales] || categoryBaseSales.all
 
   // 天气影响因子（熟食类受天气影响更大）
   const weatherMultiplier = weather_condition === 'good' ? 1.15 :
@@ -185,7 +219,7 @@ function generateRecommendations(forecastData: any[], productCategory: string) {
   const lowSalesDays = forecastData.filter(day => day.predicted_sales < avgSales * 0.8)
 
   // 基于产品类别的特定建议
-  const categoryAdvice = {
+  const categoryAdvice: CategoryAdviceMap = {
     'sausage': {
       highDemand: '维也纳香肠和蒜味烤肠是热销产品，建议重点备货',
       lowDemand: '可考虑推出香肠类组合套餐促销',
@@ -213,7 +247,7 @@ function generateRecommendations(forecastData: any[], productCategory: string) {
     }
   }
 
-  const advice = categoryAdvice[productCategory] || {
+  const advice = categoryAdvice[productCategory as keyof CategoryAdviceMap] || {
     highDemand: '预计销量较高，建议提前备货',
     lowDemand: '预计销量较低，建议开展促销活动',
     general: '建议持续监控实际销量与预测的偏差'

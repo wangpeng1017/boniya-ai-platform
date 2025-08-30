@@ -22,44 +22,37 @@ const navigationItems = [
   {
     title: '门店销售数量预测',
     href: '/sales-forecast',
-    icon: BarChart3,
-    description: '基于AI的销售预测分析'
+    icon: BarChart3
   },
   {
     title: '竞品价格分析',
     href: '/competitive-analysis',
-    icon: TrendingUp,
-    description: '竞品价格监控与对比分析'
+    icon: TrendingUp
   },
   {
     title: '电商平台数据分析',
     href: '/ecommerce-analysis',
-    icon: ShoppingCart,
-    description: '多平台数据分析与洞察'
+    icon: ShoppingCart
   },
   {
     title: '智能客服管理',
     href: '/customer-service',
-    icon: MessageSquare,
-    description: '工单管理与智能客服'
+    icon: MessageSquare
   },
   {
     title: '门店运营标准化管理',
     href: '/store-operations',
-    icon: Store,
-    description: '门店监控与合规管理'
+    icon: Store
   },
   {
     title: '产品品质智能控制',
     href: '/quality-control',
-    icon: Shield,
-    description: 'AI视觉检测与质量控制'
+    icon: Shield
   },
   {
     title: '称重商品自动识别',
     href: '/product-recognition',
-    icon: Scale,
-    description: 'AI商品识别与MOP集成'
+    icon: Scale
   }
 ]
 
@@ -90,29 +83,19 @@ export function Sidebar() {
               key={index}
               href={item.href}
               className={cn(
-                'group flex flex-col px-3 py-3 text-sm font-medium rounded-lg transition-all duration-200',
+                'group flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200',
                 isActive
                   ? 'bg-blue-50 text-blue-700 border border-blue-200 shadow-sm'
                   : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900 border border-transparent hover:border-gray-200'
               )}
             >
-              <div className="flex items-center">
-                <Icon
-                  className={cn(
-                    'mr-3 h-5 w-5 flex-shrink-0',
-                    isActive ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600'
-                  )}
-                />
-                <span className="truncate font-medium">{item.title}</span>
-              </div>
-              {item.description && (
-                <p className={cn(
-                  'mt-1 text-xs leading-relaxed ml-8',
-                  isActive ? 'text-blue-600' : 'text-gray-500'
-                )}>
-                  {item.description}
-                </p>
-              )}
+              <Icon
+                className={cn(
+                  'mr-3 h-5 w-5 flex-shrink-0',
+                  isActive ? 'text-blue-600' : 'text-gray-400 group-hover:text-gray-600'
+                )}
+              />
+              <span className="truncate font-medium">{item.title}</span>
             </Link>
           )
         })}
