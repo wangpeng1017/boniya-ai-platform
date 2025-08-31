@@ -1,4 +1,8 @@
 {
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install",
   "crons": [
     {
       "path": "/api/crawlers/jd-comments/schedule",
@@ -6,11 +10,23 @@
     }
   ],
   "functions": {
-    "src/app/api/crawlers/jd-comments/route.ts": {
-      "maxDuration": 300
+    "boniya-ai-platform/src/app/api/*/route.ts": {
+      "maxDuration": 10
     },
-    "src/app/api/crawlers/jd-comments/schedule/route.ts": {
-      "maxDuration": 600
+    "boniya-ai-platform/src/app/api/crawlers/jd-comments/route.ts": {
+      "maxDuration": 10
+    },
+    "boniya-ai-platform/src/app/api/crawlers/jd-comments/schedule/route.ts": {
+      "maxDuration": 10
+    },
+    "boniya-ai-platform/src/app/api/forecast/*/route.ts": {
+      "maxDuration": 10
+    },
+    "boniya-ai-platform/src/app/api/feedback/*/route.ts": {
+      "maxDuration": 10
+    },
+    "boniya-ai-platform/src/app/api/competitor-price/*/route.ts": {
+      "maxDuration": 10
     }
   },
   "env": {

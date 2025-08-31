@@ -59,10 +59,17 @@ ${rawText}
 `
 
     try {
-      const response = await geminiClient.generateContent(prompt, { 
-        temperature: 0.2,
-        maxTokens: 400 
+      // 添加5秒超时控制
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('AI请求超时')), 5000)
       })
+
+      const aiPromise = geminiClient.generateContent(prompt, {
+        temperature: 0.2,
+        maxTokens: 400
+      })
+
+      const response = await Promise.race([aiPromise, timeoutPromise]) as string
       
       // 提取JSON
       const jsonMatch = response.match(/\{[\s\S]*?\}/)
