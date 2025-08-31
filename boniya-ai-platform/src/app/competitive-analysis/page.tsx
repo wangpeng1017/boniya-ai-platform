@@ -10,8 +10,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
-import { TrendingUp, TrendingDown, Minus, Search, RefreshCw, Plus, Camera, Upload, AlertCircle, Eye, Calendar, MapPin, User, Image as ImageIcon } from 'lucide-react'
+import { TrendingUp, TrendingDown, Minus, Search, RefreshCw, Plus, Camera, Upload, AlertCircle, Eye, Calendar, MapPin, User, Image as ImageIcon, Mic, FileImage } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
+import OCRUpload from '@/components/recognition/OCRUpload'
+import SpeechRecognitionComponent from '@/components/recognition/SpeechRecognition'
 
 interface CompetitorData {
   id: number
@@ -809,42 +811,88 @@ export default function CompetitiveAnalysisPage() {
                   <TrendingUp className="h-5 w-5 text-green-600" />
                   <span>AI智能数据录入</span>
                 </CardTitle>
-                <CardDescription>使用Gemini AI自动解析和结构化竞品价格信息</CardDescription>
+                <CardDescription>使用多种方式录入竞品价格信息，AI自动解析和结构化</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  <div>
-                    <Label htmlFor="raw-data-input">原始数据输入</Label>
-                    <textarea
-                      id="raw-data-input"
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 min-h-[100px]"
-                      placeholder="例如：那个喜旺的蒜香味儿的烤肠，160克一包的，现在卖七块九。"
-                      value={rawDataInput}
-                      onChange={(e) => setRawDataInput(e.target.value)}
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      支持语音转文字、OCR识别结果或手动输入的原始文本
-                    </p>
-                  </div>
+                <Tabs defaultValue="manual" className="w-full">
+                  <TabsList className="grid w-full grid-cols-3">
+                    <TabsTrigger value="manual" className="flex items-center space-x-2">
+                      <span>手动输入</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="ocr" className="flex items-center space-x-2">
+                      <FileImage className="h-4 w-4" />
+                      <span>拍照识别</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="speech" className="flex items-center space-x-2">
+                      <Mic className="h-4 w-4" />
+                      <span>语音录入</span>
+                    </TabsTrigger>
+                  </TabsList>
 
-                  <Button
-                    onClick={handleProcessRawData}
-                    disabled={processingLoading || !rawDataInput.trim()}
-                    className="w-full"
-                  >
-                    {processingLoading ? (
-                      <>
-                        <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                        AI处理中...
-                      </>
-                    ) : (
-                      <>
-                        <TrendingUp className="mr-2 h-4 w-4" />
-                        AI智能解析并保存
-                      </>
-                    )}
-                  </Button>
-                </div>
+                  {/* 手动输入 */}
+                  <TabsContent value="manual" className="space-y-4">
+                    <div>
+                      <Label htmlFor="raw-data-input">原始数据输入</Label>
+                      <textarea
+                        id="raw-data-input"
+                        className="w-full rounded-md border border-gray-300 px-3 py-2 min-h-[100px]"
+                        placeholder="例如：那个喜旺的蒜香味儿的烤肠，160克一包的，现在卖七块九。"
+                        value={rawDataInput}
+                        onChange={(e) => setRawDataInput(e.target.value)}
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        直接输入竞品价格信息，支持自然语言描述
+                      </p>
+                    </div>
+
+                    <Button
+                      onClick={handleProcessRawData}
+                      disabled={processingLoading || !rawDataInput.trim()}
+                      className="w-full"
+                    >
+                      {processingLoading ? (
+                        <>
+                          <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                          AI处理中...
+                        </>
+                      ) : (
+                        <>
+                          <TrendingUp className="mr-2 h-4 w-4" />
+                          AI智能解析并保存
+                        </>
+                      )}
+                    </Button>
+                  </TabsContent>
+
+                  {/* OCR识别 */}
+                  <TabsContent value="ocr" className="space-y-4">
+                    <OCRUpload
+                      onResult={(result) => {
+                        setRawDataInput(result.text)
+                        if (result.parsedData) {
+                          // 如果OCR已经解析出结构化数据，可以直接处理
+                          console.log('OCR解析结果:', result.parsedData)
+                        }
+                      }}
+                      autoParsePrice={true}
+                      recognitionType="basic"
+                    />
+                  </TabsContent>
+
+                  {/* 语音识别 */}
+                  <TabsContent value="speech" className="space-y-4">
+                    <SpeechRecognitionComponent
+                      onResult={(result) => {
+                        setRawDataInput(result.text)
+                        if (result.parsedData) {
+                          // 如果语音识别已经解析出结构化数据，可以直接处理
+                          console.log('语音识别解析结果:', result.parsedData)
+                        }
+                      }}
+                      autoParsePrice={true}
+                    />
+                  </TabsContent>
+                </Tabs>
               </CardContent>
             </Card>
 

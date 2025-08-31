@@ -108,6 +108,15 @@ ${rawText}
   }
 
   /**
+   * 解析原始文本 - OCR和语音识别的统一入口
+   * @param rawText 原始文本
+   * @returns 结构化的竞品数据
+   */
+  async parseRawText(rawText: string): Promise<CompetitorDataStructure> {
+    return this.structureCompetitorData(rawText)
+  }
+
+  /**
    * 价格趋势分析 - 分析竞品价格数据并生成洞察
    */
   async analyzePriceTrends(competitorData: Array<{
