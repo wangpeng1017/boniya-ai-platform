@@ -52,26 +52,38 @@ export async function executeQuery(query: string, params: any[] = []) {
   }
 }
 
-// 安全的SQL查询函数 - 使用模板字符串，优先使用pooled连接
+// 安全的SQL查询函数 - 优化版本，更好地处理连接字符串
 export async function executeSafeQuery(queryTemplate: TemplateStringsArray, ...values: any[]) {
   try {
-    // 检查是否有pooled连接字符串
+    // 检查可用的连接字符串
     const pooledUrl = process.env.POSTGRES_PRISMA_URL
     const directUrl = process.env.POSTGRES_URL
+    const prismaUrl = process.env.PRISMA_DATABASE_URL
 
-    if (!pooledUrl && !directUrl) {
-      throw new Error('No database connection string found. Please set POSTGRES_PRISMA_URL or POSTGRES_URL environment variable.')
+    console.log('Database connection check:', {
+      hasPooledUrl: !!pooledUrl,
+      hasDirectUrl: !!directUrl,
+      hasPrismaUrl: !!prismaUrl
+    })
+
+    // 优先级：POSTGRES_PRISMA_URL > PRISMA_DATABASE_URL > POSTGRES_URL
+    let connectionString = pooledUrl || prismaUrl || directUrl
+
+    if (!connectionString) {
+      throw new Error('No database connection string found. Please set POSTGRES_PRISMA_URL, PRISMA_DATABASE_URL, or POSTGRES_URL environment variable.')
     }
 
-    // 优先使用pooled连接，如果没有则使用直连
-    if (pooledUrl) {
-      // 使用pooled连接的sql函数
+    // 检查连接字符串类型并选择合适的连接方式
+    if (connectionString.includes('pgbouncer=true') || connectionString.includes('prisma+postgres://')) {
+      // 使用池化连接
+      console.log('Using pooled connection')
       const result = await sql(queryTemplate, ...values)
       return result
     } else {
-      // 使用createClient进行直连
+      // 使用直连
+      console.log('Using direct connection with createClient')
       const client = createClient({
-        connectionString: directUrl
+        connectionString: connectionString
       })
 
       try {
@@ -89,6 +101,11 @@ export async function executeSafeQuery(queryTemplate: TemplateStringsArray, ...v
     }
   } catch (error) {
     console.error('Safe query execution failed:', error)
+    console.error('Connection details:', {
+      hasPooledUrl: !!process.env.POSTGRES_PRISMA_URL,
+      hasDirectUrl: !!process.env.POSTGRES_URL,
+      hasPrismaUrl: !!process.env.PRISMA_DATABASE_URL
+    })
     throw error
   }
 }

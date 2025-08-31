@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { BarChart3, TrendingUp, Calendar, Store, RefreshCw, Download, AlertCircle } from 'lucide-react'
+import { BarChart3, TrendingUp, Calendar, Store, RefreshCw, Download, AlertCircle, Settings } from 'lucide-react'
 import { useState, useEffect } from 'react'
 
 interface ForecastData {
@@ -217,51 +217,54 @@ export default function SalesForecastPage() {
           </Card>
         </div>
 
-        {/* Forecast Configuration */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-1">
-            <CardHeader>
-              <CardTitle>预测配置</CardTitle>
-              <CardDescription>设置预测参数和条件</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
+        {/* Forecast Configuration - 单独占一行 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <Settings className="h-5 w-5 text-blue-600" />
+              <span>预测配置</span>
+            </CardTitle>
+            <CardDescription>设置预测参数和条件</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="store">选择门店</Label>
+                <Label htmlFor="store" className="text-sm font-medium">选择门店</Label>
                 <select
                   id="store"
-                  className="w-full rounded-md border border-gray-300 px-3 py-2"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
                   value={formData.store_id}
                   onChange={(e) => setFormData({...formData, store_id: e.target.value})}
                 >
-                  <option value="qingdao_chengyang">青岛市城阳区利客来城阳直营专柜</option>
-                  <option value="qingdao_licang">青岛市李沧区大润发专柜</option>
-                  <option value="qingdao_shibei">青岛市市北区家乐福专柜</option>
-                  <option value="qingdao_huangdao">青岛市黄岛区沃尔玛专柜</option>
+                  <option value="qingdao_chengyang">城阳利客来</option>
+                  <option value="qingdao_licang">李沧大润发</option>
+                  <option value="qingdao_shibei">市北家乐福</option>
+                  <option value="qingdao_huangdao">黄岛沃尔玛</option>
                 </select>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="product">商品类别</Label>
+                <Label htmlFor="product" className="text-sm font-medium">商品类别</Label>
                 <select
                   id="product"
-                  className="w-full rounded-md border border-gray-300 px-3 py-2"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
                   value={formData.product_category}
                   onChange={(e) => setFormData({...formData, product_category: e.target.value})}
                 >
-                  <option value="ham">火腿类（德国黑森林火腿、法国皇家火腿等）</option>
-                  <option value="sausage">香肠类（蒜味烤肠、维也纳香肠、肉枣肠等）</option>
-                  <option value="cooked">熟食类（猪头肉、酱猪耳、老汤牛肉等）</option>
-                  <option value="soup">汤品类（牛肉汤、大肠汤）</option>
-                  <option value="packaged">包装食品（流亭猪蹄、肉丸等）</option>
+                  <option value="ham">火腿类</option>
+                  <option value="sausage">香肠类</option>
+                  <option value="cooked">熟食类</option>
+                  <option value="soup">汤品类</option>
+                  <option value="packaged">包装食品</option>
                   <option value="all">全部类别</option>
                 </select>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="period">预测周期</Label>
+                <Label htmlFor="period" className="text-sm font-medium">预测周期</Label>
                 <select
                   id="period"
-                  className="w-full rounded-md border border-gray-300 px-3 py-2"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
                   value={formData.forecast_days.toString()}
                   onChange={(e) => setFormData({...formData, forecast_days: parseInt(e.target.value)})}
                 >
@@ -272,10 +275,10 @@ export default function SalesForecastPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="weather">天气条件</Label>
+                <Label htmlFor="weather" className="text-sm font-medium">天气条件</Label>
                 <select
                   id="weather"
-                  className="w-full rounded-md border border-gray-300 px-3 py-2"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
                   value={formData.weather_condition}
                   onChange={(e) => setFormData({...formData, weather_condition: e.target.value})}
                 >
@@ -286,15 +289,17 @@ export default function SalesForecastPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confidence">置信度</Label>
+                <Label htmlFor="confidence" className="text-sm font-medium">置信度(%)</Label>
                 <Input
                   type="number"
+                  className="text-sm"
                   value={formData.confidence_level}
                   onChange={(e) => setFormData({...formData, confidence_level: parseInt(e.target.value)})}
                   min="50"
                   max="99"
                 />
               </div>
+            </div>
 
               <div className="flex items-center space-x-2">
                 <input
@@ -376,77 +381,85 @@ export default function SalesForecastPage() {
                 )}
               </Button>
             </CardContent>
-          </Card>
+        </Card>
 
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle>预测结果</CardTitle>
-              <CardDescription>基于AI模型的销售量预测结果</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {forecastData ? (
-                <div className="space-y-6">
-                  {/* 预测摘要 */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="bg-blue-50 p-4 rounded-lg">
-                      <p className="text-sm text-blue-600">总预测销量</p>
-                      <p className="text-2xl font-bold text-blue-900">
-                        {forecastData.summary.total_predicted_sales.toLocaleString()}
-                      </p>
-                    </div>
-                    <div className="bg-green-50 p-4 rounded-lg">
-                      <p className="text-sm text-green-600">日均销量</p>
-                      <p className="text-2xl font-bold text-green-900">
-                        {forecastData.summary.avg_daily_sales.toLocaleString()}
-                      </p>
-                    </div>
-                    <div className="bg-purple-50 p-4 rounded-lg">
-                      <p className="text-sm text-purple-600">平均置信度</p>
-                      <p className="text-2xl font-bold text-purple-900">
-                        {forecastData.summary.avg_confidence}%
-                      </p>
-                    </div>
-                    <div className="bg-orange-50 p-4 rounded-lg">
-                      <p className="text-sm text-orange-600">预测准确率</p>
-                      <p className="text-2xl font-bold text-orange-900">
-                        {forecastData.accuracy_rate}%
-                      </p>
-                    </div>
+        {/* Forecast Results - 单独占一行 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <TrendingUp className="h-5 w-5 text-green-600" />
+              <span>预测结果</span>
+            </CardTitle>
+            <CardDescription>基于AI模型的销售量预测结果</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {forecastData ? (
+              <div className="space-y-4">
+                {/* 预测摘要 - 紧凑显示 */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="bg-blue-50 p-3 rounded-lg">
+                    <p className="text-xs text-blue-600 mb-1">总预测销量</p>
+                    <p className="text-lg font-bold text-blue-900">
+                      {forecastData.summary.total_predicted_sales.toLocaleString()}
+                    </p>
                   </div>
+                  <div className="bg-green-50 p-3 rounded-lg">
+                    <p className="text-xs text-green-600 mb-1">日均销量</p>
+                    <p className="text-lg font-bold text-green-900">
+                      {forecastData.summary.avg_daily_sales.toLocaleString()}
+                    </p>
+                  </div>
+                  <div className="bg-purple-50 p-3 rounded-lg">
+                    <p className="text-xs text-purple-600 mb-1">平均置信度</p>
+                    <p className="text-lg font-bold text-purple-900">
+                      {forecastData.summary.avg_confidence}%
+                    </p>
+                  </div>
+                  <div className="bg-orange-50 p-3 rounded-lg">
+                    <p className="text-xs text-orange-600 mb-1">预测准确率</p>
+                    <p className="text-lg font-bold text-orange-900">
+                      {forecastData.accuracy_rate}%
+                    </p>
+                  </div>
+                </div>
 
-                  {/* 预测数据表格 */}
-                  <div className="border rounded-lg overflow-hidden">
-                    <table className="w-full">
-                      <thead className="bg-gray-50">
-                        <tr>
-                          <th className="px-4 py-2 text-left text-sm font-medium text-gray-900">日期</th>
-                          <th className="px-4 py-2 text-left text-sm font-medium text-gray-900">预测销量</th>
-                          <th className="px-4 py-2 text-left text-sm font-medium text-gray-900">置信度</th>
-                          <th className="px-4 py-2 text-left text-sm font-medium text-gray-900">影响因素</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-200">
-                        {forecastData.forecast_data.map((day, index) => (
-                          <tr key={index} className="hover:bg-gray-50">
-                            <td className="px-4 py-2 text-sm">{day.date}</td>
-                            <td className="px-4 py-2 text-sm font-medium">{day.predicted_sales.toLocaleString()}</td>
-                            <td className="px-4 py-2 text-sm">
-                              <span className={`px-2 py-1 rounded-full text-xs ${
-                                day.confidence >= 90 ? 'bg-green-100 text-green-800' :
-                                day.confidence >= 80 ? 'bg-yellow-100 text-yellow-800' :
-                                'bg-red-100 text-red-800'
-                              }`}>
-                                {day.confidence.toFixed(1)}%
-                              </span>
-                            </td>
-                            <td className="px-4 py-2 text-sm text-gray-600">
-                              {day.factors.weather}, {day.factors.holiday ? '节假日' : '工作日'}, {day.factors.promotion ? '促销' : '正常'}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                {/* 预测数据列表 - 紧凑显示 */}
+                <div className="space-y-2">
+                  <h4 className="text-sm font-medium text-gray-900 mb-3">详细预测数据</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-96 overflow-y-auto">
+                    {forecastData.forecast_data.map((day, index) => (
+                      <div key={index} className="bg-gray-50 border border-gray-200 rounded-lg p-3 hover:bg-gray-100 transition-colors">
+                        <div className="flex justify-between items-start mb-2">
+                          <div className="text-sm font-medium text-gray-900">{day.date}</div>
+                          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            day.confidence >= 90 ? 'bg-green-100 text-green-800' :
+                            day.confidence >= 80 ? 'bg-yellow-100 text-yellow-800' :
+                            'bg-red-100 text-red-800'
+                          }`}>
+                            {day.confidence.toFixed(1)}%
+                          </span>
+                        </div>
+                        <div className="text-lg font-bold text-blue-600 mb-2">
+                          {day.predicted_sales.toLocaleString()} 件
+                        </div>
+                        <div className="text-xs text-gray-600 space-y-1">
+                          <div className="flex items-center space-x-2">
+                            <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
+                            <span>{day.factors.weather}</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <span className="w-2 h-2 bg-green-400 rounded-full"></span>
+                            <span>{day.factors.holiday ? '节假日' : '工作日'}</span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <span className="w-2 h-2 bg-orange-400 rounded-full"></span>
+                            <span>{day.factors.promotion ? '促销活动' : '正常销售'}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
+                </div>
 
                   {/* Gemini AI智能分析报告 */}
                   {aiReport && (
@@ -524,8 +537,7 @@ export default function SalesForecastPage() {
                 </div>
               )}
             </CardContent>
-          </Card>
-        </div>
+        </Card>
 
         {/* Recent Predictions */}
         <Card>
