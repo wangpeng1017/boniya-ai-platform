@@ -5,7 +5,10 @@
   "installCommand": "npm install",
   "functions": {
     "src/app/api/*/route.ts": {
-      "maxDuration": 60
+      "maxDuration": 10
+    },
+    "src/app/api/**/*.ts": {
+      "maxDuration": 10
     }
   }
 }

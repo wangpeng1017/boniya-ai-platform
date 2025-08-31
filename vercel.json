@@ -1,35 +1,6 @@
 {
-  "framework": "nextjs",
-  "buildCommand": "npm run build",
-  "outputDirectory": ".next",
-  "installCommand": "npm install",
-  "crons": [
-    {
-      "path": "/api/crawlers/jd-comments/schedule",
-      "schedule": "0 3 * * *"
-    }
-  ],
-  "functions": {
-    "boniya-ai-platform/src/app/api/*/route.ts": {
-      "maxDuration": 10
-    },
-    "boniya-ai-platform/src/app/api/crawlers/jd-comments/route.ts": {
-      "maxDuration": 10
-    },
-    "boniya-ai-platform/src/app/api/crawlers/jd-comments/schedule/route.ts": {
-      "maxDuration": 10
-    },
-    "boniya-ai-platform/src/app/api/forecast/*/route.ts": {
-      "maxDuration": 10
-    },
-    "boniya-ai-platform/src/app/api/feedback/*/route.ts": {
-      "maxDuration": 10
-    },
-    "boniya-ai-platform/src/app/api/competitor-price/*/route.ts": {
-      "maxDuration": 10
-    }
-  },
-  "env": {
-    "PYTHON_VERSION": "3.9"
-  }
+  "buildCommand": "cd boniya-ai-platform && npm run build",
+  "outputDirectory": "boniya-ai-platform/.next",
+  "installCommand": "cd boniya-ai-platform && npm install",
+  "framework": "nextjs"
 }
