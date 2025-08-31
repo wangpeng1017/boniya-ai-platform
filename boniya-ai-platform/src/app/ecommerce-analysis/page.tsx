@@ -12,11 +12,84 @@ import { useState } from 'react'
 export default function EcommerceAnalysisPage() {
   const [loading, setLoading] = useState(false)
   const [analysisData, setAnalysisData] = useState<any[]>([])
+  const [feedbackInsights, setFeedbackInsights] = useState<any>(null)
+  const [insightsLoading, setInsightsLoading] = useState(false)
+  const [feedbackInput, setFeedbackInput] = useState('')
+  const [feedbackAnalysisLoading, setFeedbackAnalysisLoading] = useState(false)
   const [formData, setFormData] = useState({
     platform: 'jd',
     product_name: '',
     product_url: ''
   })
+
+  // AI反馈分析函数
+  const handleFeedbackAnalysis = async () => {
+    if (!feedbackInput.trim()) {
+      alert('请输入用户反馈内容')
+      return
+    }
+
+    setFeedbackAnalysisLoading(true)
+    try {
+      const response = await fetch('/api/feedback/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          feedbackText: feedbackInput,
+          platform: formData.platform,
+          orderId: null
+        })
+      })
+
+      const result = await response.json()
+      if (result.success) {
+        alert('反馈分析完成！')
+        setFeedbackInput('')
+        // 可以在这里更新UI显示分析结果
+      } else {
+        alert('反馈分析失败: ' + result.error)
+      }
+    } catch (error) {
+      console.error('Feedback analysis error:', error)
+      alert('反馈分析失败，请稍后重试')
+    } finally {
+      setFeedbackAnalysisLoading(false)
+    }
+  }
+
+  // 生成反馈洞察报告函数
+  const handleGenerateInsights = async () => {
+    setInsightsLoading(true)
+    try {
+      const response = await fetch('/api/feedback/insights', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          platform: formData.platform,
+          startDate: null,
+          endDate: null,
+          sentimentFilter: 'all',
+          urgencyFilter: 'all'
+        })
+      })
+
+      const result = await response.json()
+      if (result.success) {
+        setFeedbackInsights(result.data.insights)
+      } else {
+        alert('洞察生成失败: ' + result.error)
+      }
+    } catch (error) {
+      console.error('Insights generation error:', error)
+      alert('洞察生成失败，请稍后重试')
+    } finally {
+      setInsightsLoading(false)
+    }
+  }
 
   const handleAnalysis = async () => {
     if (!formData.product_name) {
@@ -155,6 +228,156 @@ export default function EcommerceAnalysisPage() {
             </div>
           </CardContent>
         </Card>
+
+        {/* AI反馈分析 */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* 单条反馈分析 */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <MessageSquare className="h-5 w-5 text-blue-600" />
+                <span>Gemini AI 反馈分析</span>
+              </CardTitle>
+              <CardDescription>智能分析用户反馈的情感、问题和紧急程度</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="feedback-input">用户反馈内容</Label>
+                  <textarea
+                    id="feedback-input"
+                    className="w-full rounded-md border border-gray-300 px-3 py-2 min-h-[100px]"
+                    placeholder="例如：第二次买了，但是这次的包装是坏的，里面的火腿肠都黏糊糊的了，不敢吃，联系客服半天了也没人回！"
+                    value={feedbackInput}
+                    onChange={(e) => setFeedbackInput(e.target.value)}
+                  />
+                </div>
+
+                <Button
+                  onClick={handleFeedbackAnalysis}
+                  disabled={feedbackAnalysisLoading || !feedbackInput.trim()}
+                  className="w-full"
+                >
+                  {feedbackAnalysisLoading ? (
+                    <>
+                      <TrendingUp className="mr-2 h-4 w-4 animate-spin" />
+                      AI分析中...
+                    </>
+                  ) : (
+                    <>
+                      <MessageSquare className="mr-2 h-4 w-4" />
+                      开始AI反馈分析
+                    </>
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* 反馈洞察报告 */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <TrendingUp className="h-5 w-5 text-green-600" />
+                <span>反馈洞察报告</span>
+              </CardTitle>
+              <CardDescription>基于历史反馈数据生成智能洞察</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <Button
+                  onClick={handleGenerateInsights}
+                  disabled={insightsLoading}
+                  className="w-full"
+                >
+                  {insightsLoading ? (
+                    <>
+                      <TrendingUp className="mr-2 h-4 w-4 animate-spin" />
+                      生成洞察中...
+                    </>
+                  ) : (
+                    <>
+                      <TrendingUp className="mr-2 h-4 w-4" />
+                      生成AI洞察报告
+                    </>
+                  )}
+                </Button>
+
+                {/* 洞察结果展示 */}
+                {feedbackInsights && (
+                  <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-semibold text-green-900">AI洞察报告</h4>
+                      <span className={`px-2 py-1 rounded-full text-xs ${
+                        feedbackInsights.confidence_level === 'high' ? 'bg-green-100 text-green-800' :
+                        feedbackInsights.confidence_level === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {feedbackInsights.confidence_level === 'high' ? '高置信度' :
+                         feedbackInsights.confidence_level === 'medium' ? '中等置信度' : '低置信度'}
+                      </span>
+                    </div>
+
+                    {/* 数据概览 */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-white/70 rounded p-3">
+                        <h5 className="font-medium text-green-800 mb-2">📊 反馈总数</h5>
+                        <p className="text-2xl font-bold text-green-900">{feedbackInsights.total_feedback_count}</p>
+                      </div>
+                      <div className="bg-white/70 rounded p-3">
+                        <h5 className="font-medium text-green-800 mb-2">😊 情感分布</h5>
+                        <div className="text-sm text-green-700">
+                          <div>正面: {feedbackInsights.sentiment_distribution.positive}</div>
+                          <div>中性: {feedbackInsights.sentiment_distribution.neutral}</div>
+                          <div>负面: {feedbackInsights.sentiment_distribution.negative}</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 主要问题 */}
+                    <div className="bg-white/70 rounded p-3">
+                      <h5 className="font-medium text-green-800 mb-2">🔍 主要问题</h5>
+                      <div className="space-y-1">
+                        {feedbackInsights.top_issues.slice(0, 5).map((issue: any, index: number) => (
+                          <div key={index} className="flex justify-between text-sm text-green-700">
+                            <span>{issue.issue}</span>
+                            <span>{issue.count}次 ({issue.percentage}%)</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* 关键洞察 */}
+                    <div className="bg-white/70 rounded p-3">
+                      <h5 className="font-medium text-green-800 mb-2">💡 关键洞察</h5>
+                      <ul className="text-sm text-green-700 space-y-1">
+                        {feedbackInsights.key_insights.map((insight: string, index: number) => (
+                          <li key={index} className="flex items-start space-x-2">
+                            <span className="text-green-500 mt-1">•</span>
+                            <span>{insight}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    {/* 改进建议 */}
+                    <div className="bg-white/70 rounded p-3">
+                      <h5 className="font-medium text-green-800 mb-2">🚀 改进建议</h5>
+                      <ul className="text-sm text-green-700 space-y-1">
+                        {feedbackInsights.improvement_suggestions.map((suggestion: string, index: number) => (
+                          <li key={index} className="flex items-start space-x-2">
+                            <span className="text-green-500 mt-1">•</span>
+                            <span>{suggestion}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* 分析结果 */}
         {analysisData.length > 0 && (

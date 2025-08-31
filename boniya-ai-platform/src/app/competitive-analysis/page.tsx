@@ -80,6 +80,10 @@ export default function CompetitiveAnalysisPage() {
   const [dateRange, setDateRange] = useState({ start: '', end: '' })
   const [selectedRegion, setSelectedRegion] = useState('all')
   const [selectedImageUrl, setSelectedImageUrl] = useState<string | null>(null)
+  const [aiAnalysis, setAiAnalysis] = useState<any>(null)
+  const [analysisLoading, setAnalysisLoading] = useState(false)
+  const [rawDataInput, setRawDataInput] = useState('')
+  const [processingLoading, setProcessingLoading] = useState(false)
   const [competitorData, setCompetitorData] = useState<CompetitorData[]>([])
   const [analysisSummary, setAnalysisSummary] = useState<AnalysisSummary | null>(null)
   const [showAddForm, setShowAddForm] = useState(false)
@@ -232,6 +236,79 @@ export default function CompetitiveAnalysisPage() {
       console.error('获取竞品数据失败:', error)
     } finally {
       setRecordsLoading(false)
+    }
+  }
+
+  // AI价格趋势分析函数
+  const handleAIAnalysis = async () => {
+    setAnalysisLoading(true)
+    try {
+      const response = await fetch('/api/competitor-price/analyze-trends', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          brand: 'all',
+          region: selectedRegion === 'all' ? null : selectedRegion,
+          startDate: dateRange.start,
+          endDate: dateRange.end,
+          analysisType: 'comprehensive'
+        })
+      })
+
+      const result = await response.json()
+      if (result.success) {
+        setAiAnalysis(result.data)
+      } else {
+        alert('AI分析失败: ' + result.error)
+      }
+    } catch (error) {
+      console.error('AI analysis error:', error)
+      alert('AI分析失败，请稍后重试')
+    } finally {
+      setAnalysisLoading(false)
+    }
+  }
+
+  // 处理原始数据函数
+  const handleProcessRawData = async () => {
+    if (!rawDataInput.trim()) {
+      alert('请输入原始数据')
+      return
+    }
+
+    setProcessingLoading(true)
+    try {
+      const response = await fetch('/api/competitor-price/process-raw-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          rawText: rawDataInput,
+          sourceType: 'manual',
+          locationText: selectedRegion === 'all' ? null : selectedRegion,
+          salespersonId: 1
+        })
+      })
+
+      const result = await response.json()
+      if (result.success) {
+        alert('数据处理成功！')
+        setRawDataInput('')
+        // 刷新竞品数据
+        if (activeTab === 'data') {
+          fetchCompetitorRecords()
+        }
+      } else {
+        alert('数据处理失败: ' + result.error)
+      }
+    } catch (error) {
+      console.error('Raw data processing error:', error)
+      alert('数据处理失败，请稍后重试')
+    } finally {
+      setProcessingLoading(false)
     }
   }
 
@@ -553,6 +630,142 @@ export default function CompetitiveAnalysisPage() {
           </CardContent>
         </Card>
 
+        {/* AI智能分析 */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <TrendingUp className="h-5 w-5 text-blue-600" />
+              <span>Gemini AI 智能分析</span>
+            </CardTitle>
+            <CardDescription>基于AI的竞品价格趋势分析和市场洞察</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <Button
+                onClick={handleAIAnalysis}
+                disabled={analysisLoading}
+                className="w-full"
+              >
+                {analysisLoading ? (
+                  <>
+                    <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                    AI分析中...
+                  </>
+                ) : (
+                  <>
+                    <TrendingUp className="mr-2 h-4 w-4" />
+                    开始AI智能分析
+                  </>
+                )}
+              </Button>
+
+              {/* AI分析结果展示 */}
+              {aiAnalysis && (
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-semibold text-blue-900">AI分析报告</h4>
+                    <span className={`px-2 py-1 rounded-full text-xs ${
+                      aiAnalysis.trend_analysis.confidence_level === 'high' ? 'bg-green-100 text-green-800' :
+                      aiAnalysis.trend_analysis.confidence_level === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                      'bg-red-100 text-red-800'
+                    }`}>
+                      {aiAnalysis.trend_analysis.confidence_level === 'high' ? '高置信度' :
+                       aiAnalysis.trend_analysis.confidence_level === 'medium' ? '中等置信度' : '低置信度'}
+                    </span>
+                  </div>
+
+                  {/* 执行摘要 */}
+                  <div className="bg-white/70 rounded p-3">
+                    <h5 className="font-medium text-blue-800 mb-2">📊 执行摘要</h5>
+                    <p className="text-sm text-blue-700">{aiAnalysis.summary_report}</p>
+                  </div>
+
+                  {/* 趋势分析 */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-white/70 rounded p-3">
+                      <h5 className="font-medium text-blue-800 mb-2">📈 价格趋势</h5>
+                      <div className="flex items-center space-x-2">
+                        <span className={`px-2 py-1 rounded text-xs ${
+                          aiAnalysis.trend_analysis.trend_direction === 'rising' ? 'bg-red-100 text-red-800' :
+                          aiAnalysis.trend_analysis.trend_direction === 'falling' ? 'bg-green-100 text-green-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {aiAnalysis.trend_analysis.trend_direction === 'rising' ? '上涨' :
+                           aiAnalysis.trend_analysis.trend_direction === 'falling' ? '下跌' :
+                           aiAnalysis.trend_analysis.trend_direction === 'stable' ? '稳定' : '波动'}
+                        </span>
+                        <span className="text-sm text-blue-700">
+                          强度: {aiAnalysis.trend_analysis.trend_strength === 'strong' ? '强' :
+                                aiAnalysis.trend_analysis.trend_strength === 'moderate' ? '中等' : '弱'}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="bg-white/70 rounded p-3">
+                      <h5 className="font-medium text-blue-800 mb-2">📊 数据点</h5>
+                      <p className="text-2xl font-bold text-blue-900">{aiAnalysis.data_points_count}</p>
+                      <p className="text-xs text-blue-600">个价格数据点</p>
+                    </div>
+                  </div>
+
+                  {/* 关键洞察 */}
+                  <div className="bg-white/70 rounded p-3">
+                    <h5 className="font-medium text-blue-800 mb-2">💡 关键洞察</h5>
+                    <ul className="text-sm text-blue-700 space-y-1">
+                      {aiAnalysis.trend_analysis.key_insights.map((insight: string, index: number) => (
+                        <li key={index} className="flex items-start space-x-2">
+                          <span className="text-blue-500 mt-1">•</span>
+                          <span>{insight}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* 市场机会和威胁 */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="bg-white/70 rounded p-3">
+                      <h5 className="font-medium text-green-800 mb-2">🚀 市场机会</h5>
+                      <ul className="text-sm text-green-700 space-y-1">
+                        {aiAnalysis.trend_analysis.market_opportunities.map((opportunity: string, index: number) => (
+                          <li key={index} className="flex items-start space-x-2">
+                            <span className="text-green-500 mt-1">•</span>
+                            <span>{opportunity}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="bg-white/70 rounded p-3">
+                      <h5 className="font-medium text-red-800 mb-2">⚠️ 潜在威胁</h5>
+                      <ul className="text-sm text-red-700 space-y-1">
+                        {aiAnalysis.trend_analysis.threats.map((threat: string, index: number) => (
+                          <li key={index} className="flex items-start space-x-2">
+                            <span className="text-red-500 mt-1">•</span>
+                            <span>{threat}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  {/* 定价建议 */}
+                  <div className="bg-white/70 rounded p-3">
+                    <h5 className="font-medium text-purple-800 mb-2">💰 定价建议</h5>
+                    <ul className="text-sm text-purple-700 space-y-1">
+                      {aiAnalysis.trend_analysis.pricing_recommendations.map((recommendation: string, index: number) => (
+                        <li key={index} className="flex items-start space-x-2">
+                          <span className="text-purple-500 mt-1">•</span>
+                          <span>{recommendation}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Price Alerts */}
         <Card>
           <CardHeader>
@@ -589,6 +802,52 @@ export default function CompetitiveAnalysisPage() {
 
           {/* 竞品数据标签页 */}
           <TabsContent value="data" className="space-y-6">
+            {/* AI数据处理 */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <TrendingUp className="h-5 w-5 text-green-600" />
+                  <span>AI智能数据录入</span>
+                </CardTitle>
+                <CardDescription>使用Gemini AI自动解析和结构化竞品价格信息</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="raw-data-input">原始数据输入</Label>
+                    <textarea
+                      id="raw-data-input"
+                      className="w-full rounded-md border border-gray-300 px-3 py-2 min-h-[100px]"
+                      placeholder="例如：那个喜旺的蒜香味儿的烤肠，160克一包的，现在卖七块九。"
+                      value={rawDataInput}
+                      onChange={(e) => setRawDataInput(e.target.value)}
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      支持语音转文字、OCR识别结果或手动输入的原始文本
+                    </p>
+                  </div>
+
+                  <Button
+                    onClick={handleProcessRawData}
+                    disabled={processingLoading || !rawDataInput.trim()}
+                    className="w-full"
+                  >
+                    {processingLoading ? (
+                      <>
+                        <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                        AI处理中...
+                      </>
+                    ) : (
+                      <>
+                        <TrendingUp className="mr-2 h-4 w-4" />
+                        AI智能解析并保存
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
             {/* 筛选器 */}
             <Card>
               <CardHeader>

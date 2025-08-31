@@ -34,6 +34,10 @@ interface ForecastData {
 export default function SalesForecastPage() {
   const [loading, setLoading] = useState(false)
   const [forecastData, setForecastData] = useState<ForecastData | null>(null)
+  const [aiReport, setAiReport] = useState<any>(null)
+  const [eventDescription, setEventDescription] = useState('')
+  const [extractedFeatures, setExtractedFeatures] = useState<any>(null)
+  const [featureLoading, setFeatureLoading] = useState(false)
   const [formData, setFormData] = useState({
     store_id: 'qingdao_chengyang',
     product_category: 'all',
@@ -45,6 +49,84 @@ export default function SalesForecastPage() {
   })
 
 
+
+  // 特征提取函数
+  const handleFeatureExtraction = async () => {
+    if (!eventDescription.trim()) {
+      alert('请输入事件描述')
+      return
+    }
+
+    setFeatureLoading(true)
+    try {
+      const response = await fetch('/api/forecast/extract-features', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          eventDescription: eventDescription
+        })
+      })
+
+      const result = await response.json()
+      if (result.success) {
+        setExtractedFeatures(result.data)
+      } else {
+        alert('特征提取失败: ' + result.error)
+      }
+    } catch (error) {
+      console.error('Feature extraction error:', error)
+      alert('特征提取失败，请稍后重试')
+    } finally {
+      setFeatureLoading(false)
+    }
+  }
+
+  // 生成AI报告函数
+  const generateAIReport = async (forecastData: any) => {
+    try {
+      const reportData = {
+        product_name: getProductName(formData.product_category),
+        forecast_data: forecastData.forecast_data.reduce((acc: any, item: any) => {
+          acc[item.date] = item.predicted_sales
+          return acc
+        }, {}),
+        key_factors: forecastData.summary.factors_considered,
+        analysis_period: {
+          start_date: forecastData.forecast_data[0]?.date || new Date().toISOString().split('T')[0],
+          end_date: forecastData.forecast_data[forecastData.forecast_data.length - 1]?.date || new Date().toISOString().split('T')[0]
+        }
+      }
+
+      const response = await fetch('/api/forecast/generate-report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reportData)
+      })
+
+      const result = await response.json()
+      if (result.success) {
+        setAiReport(result.data.report)
+      }
+    } catch (error) {
+      console.error('AI report generation error:', error)
+    }
+  }
+
+  // 获取产品名称
+  const getProductName = (category: string) => {
+    const categoryMap: Record<string, string> = {
+      'sausage': '香肠类产品',
+      'ham': '火腿类产品',
+      'pork': '猪肉制品',
+      'beef': '牛肉制品',
+      'all': '全品类产品'
+    }
+    return categoryMap[category] || '未知产品'
+  }
 
   const handleForecast = async () => {
     setLoading(true)
@@ -60,6 +142,8 @@ export default function SalesForecastPage() {
       const result = await response.json()
       if (result.success) {
         setForecastData(result.data.forecast_data)
+        // 自动生成AI报告
+        await generateAIReport(result.data.forecast_data)
       } else {
         alert('预测失败: ' + result.error)
       }
@@ -232,6 +316,52 @@ export default function SalesForecastPage() {
                 <Label htmlFor="promotion">促销活动期间</Label>
               </div>
 
+              {/* AI特征提取部分 */}
+              <div className="border-t pt-4 space-y-3">
+                <Label htmlFor="event-description">特殊事件描述 (AI智能分析)</Label>
+                <textarea
+                  id="event-description"
+                  className="w-full rounded-md border border-gray-300 px-3 py-2 min-h-[80px]"
+                  placeholder="例如：本周六门店门口将举办大型啤酒节活动，预计客流量大增..."
+                  value={eventDescription}
+                  onChange={(e) => setEventDescription(e.target.value)}
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleFeatureExtraction}
+                  disabled={featureLoading || !eventDescription.trim()}
+                  className="w-full"
+                >
+                  {featureLoading ? (
+                    <>
+                      <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                      AI分析中...
+                    </>
+                  ) : (
+                    <>
+                      <TrendingUp className="mr-2 h-4 w-4" />
+                      AI智能特征提取
+                    </>
+                  )}
+                </Button>
+
+                {/* 特征提取结果显示 */}
+                {extractedFeatures && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
+                    <div className="flex items-center mb-2">
+                      <AlertCircle className="h-4 w-4 text-blue-600 mr-2" />
+                      <span className="text-sm font-medium text-blue-800">AI分析结果</span>
+                    </div>
+                    <div className="text-sm text-blue-700 space-y-1">
+                      <p><strong>影响等级:</strong> {extractedFeatures.impact_level}</p>
+                      <p><strong>分析理由:</strong> {extractedFeatures.reasoning}</p>
+                      <p><strong>置信度:</strong> {Math.round(extractedFeatures.confidence * 100)}%</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               <Button className="w-full" onClick={handleForecast} disabled={loading}>
                 {loading ? (
                   <>
@@ -318,9 +448,52 @@ export default function SalesForecastPage() {
                     </table>
                   </div>
 
+                  {/* Gemini AI智能分析报告 */}
+                  {aiReport && (
+                    <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 space-y-4">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                          <TrendingUp className="h-4 w-4 text-white" />
+                        </div>
+                        <h4 className="font-semibold text-blue-900">Gemini AI 智能分析报告</h4>
+                        <span className={`px-2 py-1 rounded-full text-xs ${
+                          aiReport.confidence_level === 'high' ? 'bg-green-100 text-green-800' :
+                          aiReport.confidence_level === 'medium' ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-red-100 text-red-800'
+                        }`}>
+                          {aiReport.confidence_level === 'high' ? '高置信度' :
+                           aiReport.confidence_level === 'medium' ? '中等置信度' : '低置信度'}
+                        </span>
+                      </div>
+
+                      <div className="space-y-3">
+                        <div>
+                          <h5 className="font-medium text-blue-800 mb-2">📊 整体趋势分析</h5>
+                          <p className="text-sm text-blue-700 bg-white/50 rounded p-3">
+                            {aiReport.summary}
+                          </p>
+                        </div>
+
+                        <div>
+                          <h5 className="font-medium text-blue-800 mb-2">📈 关键日分析</h5>
+                          <p className="text-sm text-blue-700 bg-white/50 rounded p-3">
+                            {aiReport.daily_analysis}
+                          </p>
+                        </div>
+
+                        <div>
+                          <h5 className="font-medium text-blue-800 mb-2">💡 核心建议</h5>
+                          <p className="text-sm text-blue-700 bg-white/50 rounded p-3 font-medium">
+                            {aiReport.recommendation}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
                   {/* 建议 */}
                   <div className="space-y-3">
-                    <h4 className="font-medium text-gray-900">AI建议</h4>
+                    <h4 className="font-medium text-gray-900">系统建议</h4>
                     {forecastData.recommendations.map((rec, index) => (
                       <div key={index} className={`p-3 rounded-lg border-l-4 ${
                         rec.priority === 'high' ? 'border-red-500 bg-red-50' :
