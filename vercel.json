@@ -2,13 +2,5 @@
   "framework": "nextjs",
   "buildCommand": "cd boniya-ai-platform && npm run build",
   "outputDirectory": "boniya-ai-platform/.next",
-  "installCommand": "cd boniya-ai-platform && npm install",
-  "functions": {
-    "boniya-ai-platform/src/app/api/*/route.ts": {
-      "maxDuration": 10
-    },
-    "boniya-ai-platform/src/app/api/**/*.ts": {
-      "maxDuration": 10
-    }
-  }
+  "installCommand": "cd boniya-ai-platform && npm install"
 }

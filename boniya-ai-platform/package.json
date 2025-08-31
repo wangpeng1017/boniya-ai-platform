@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "test:env": "node scripts/test-env.js",
-    "test:env:api": "curl http://localhost:3000/api/test-env"
+    "test:env:api": "curl http://localhost:3000/api/test-env",
+    "verify:deployment": "node scripts/verify-deployment.js",
+    "pre-deploy": "npm run verify:deployment && npm run test:env"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",

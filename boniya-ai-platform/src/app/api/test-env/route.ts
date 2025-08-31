@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { sql } from '@vercel/postgres'
 
+// Vercel运行时配置
+export const runtime = 'nodejs'
+export const maxDuration = 10
+
 // Environment Variables Test API
 export async function GET(request: NextRequest) {
   const results = {
