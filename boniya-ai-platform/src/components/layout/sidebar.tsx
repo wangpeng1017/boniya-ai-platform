@@ -53,6 +53,11 @@ const navigationItems = [
     title: '称重商品自动识别',
     href: '/product-recognition',
     icon: Scale
+  },
+  {
+    title: '统计概览',
+    href: '/dashboard',
+    icon: Home
   }
 ]
 

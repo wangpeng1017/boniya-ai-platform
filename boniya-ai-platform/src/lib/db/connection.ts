@@ -52,11 +52,41 @@ export async function executeQuery(query: string, params: any[] = []) {
   }
 }
 
-// 安全的SQL查询函数 - 使用模板字符串
+// 安全的SQL查询函数 - 使用模板字符串，优先使用pooled连接
 export async function executeSafeQuery(queryTemplate: TemplateStringsArray, ...values: any[]) {
   try {
-    const result = await sql(queryTemplate, ...values)
-    return result
+    // 检查是否有pooled连接字符串
+    const pooledUrl = process.env.POSTGRES_PRISMA_URL
+    const directUrl = process.env.POSTGRES_URL
+
+    if (!pooledUrl && !directUrl) {
+      throw new Error('No database connection string found. Please set POSTGRES_PRISMA_URL or POSTGRES_URL environment variable.')
+    }
+
+    // 优先使用pooled连接，如果没有则使用直连
+    if (pooledUrl) {
+      // 使用pooled连接的sql函数
+      const result = await sql(queryTemplate, ...values)
+      return result
+    } else {
+      // 使用createClient进行直连
+      const client = createClient({
+        connectionString: directUrl
+      })
+
+      try {
+        // 将模板字符串转换为普通查询
+        let query = queryTemplate[0]
+        for (let i = 0; i < values.length; i++) {
+          query += '$' + (i + 1) + queryTemplate[i + 1]
+        }
+
+        const result = await client.query(query, values)
+        return result
+      } finally {
+        await client.end()
+      }
+    }
   } catch (error) {
     console.error('Safe query execution failed:', error)
     throw error
