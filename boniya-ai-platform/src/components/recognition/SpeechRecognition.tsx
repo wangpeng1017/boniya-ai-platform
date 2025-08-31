@@ -36,8 +36,6 @@ export default function SpeechRecognitionComponent({
   const [interimText, setInterimText] = useState('')
   const [isWebSpeechSupported, setIsWebSpeechSupported] = useState(false)
   
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
-  const audioChunksRef = useRef<Blob[]>([])
   const recognitionRef = useRef<any>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -369,7 +367,7 @@ export default function SpeechRecognitionComponent({
 
         {/* 使用说明 */}
         <div className="text-xs text-gray-500 space-y-1">
-          <p>• 实时录音：点击"开始录音"按钮，说话后自动识别</p>
+          <p>• 实时录音：点击&ldquo;开始录音&rdquo;按钮，说话后自动识别</p>
           <p>• 音频文件：支持 WAV、MP3、M4A、AMR 格式</p>
           <p>• 文件大小不超过 10MB</p>
           <p>• 建议在安静环境下录音，语速适中</p>

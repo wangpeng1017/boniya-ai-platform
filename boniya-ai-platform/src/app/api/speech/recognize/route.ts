@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData()
     const audio = formData.get('audio') as File
     const autoParsePrice = formData.get('autoParsePrice') === 'true'
-    const format = formData.get('format') as string || 'wav'
+    // const format = formData.get('format') as string || 'wav'
     const rate = parseInt(formData.get('rate') as string || '16000')
 
     if (!audio) {
