@@ -9,9 +9,9 @@ export async function GET() {
     const results = {
       timestamp: new Date().toISOString(),
       services: {
-        ocr: { available: false, message: '', error: null },
-        speech: { available: false, message: '', error: null },
-        ai: { available: false, message: '', error: null }
+        ocr: { available: false, message: '', error: null as string | null },
+        speech: { available: false, message: '', error: null as string | null },
+        ai: { available: false, message: '', error: null as string | null }
       },
       overall_status: 'unknown'
     }
