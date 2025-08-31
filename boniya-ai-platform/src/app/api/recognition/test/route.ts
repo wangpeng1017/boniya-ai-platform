@@ -103,8 +103,8 @@ export async function POST(request: NextRequest) {
       test_type: testType,
       timestamp: new Date().toISOString(),
       steps: {
-        recognition: { success: false, data: null, error: null },
-        parsing: { success: false, data: null, error: null }
+        recognition: { success: false, data: null as any, error: null as string | null },
+        parsing: { success: false, data: null as any, error: null as string | null }
       },
       overall_success: false
     }
