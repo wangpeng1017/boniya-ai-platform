@@ -1,6 +1,15 @@
 {
-  "buildCommand": "cd boniya-ai-platform && npm run build",
-  "outputDirectory": "boniya-ai-platform/.next",
-  "installCommand": "cd boniya-ai-platform && npm install",
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "rootDirectory": "boniya-ai-platform",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install",
+  "functions": {
+    "src/app/api/*/route.ts": {
+      "maxDuration": 10
+    },
+    "src/app/api/**/*.ts": {
+      "maxDuration": 10
+    }
+  }
 }
