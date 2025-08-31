@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:env": "node scripts/test-env.js",
+    "test:env:api": "curl http://localhost:3000/api/test-env"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
